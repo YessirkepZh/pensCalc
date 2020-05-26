@@ -1,11 +1,11 @@
-import React, { Component, useState } from 'react';
+import React, { Component, useState, useRef } from 'react';
 import InputSum from './components/InputSum';
 import InputExp from './components/InputExp';
 import InputSalary from './components/InputSalary';
 import SelectPeriod from './components/SelectPeriod';
 import InfoBlock from './components/InfoBlock';
 // import DatePicker from './components/DatePicker'
-import Results from './components/Results'
+
 import axios from 'axios';
 import base64  from 'base-64';
 import {Response,EnpfCalculatorOptimist,EnpfCalculatorRealist,EnpfCalculatorPessimist, inputObj, outputObj} from './components/interface';
@@ -13,6 +13,9 @@ import Swal from 'sweetalert2';
 import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
 import './App.css';
 import { DatePicker } from "@material-ui/pickers";
+import Tabs from './components/Tabs'
+import ReactDOM from 'react-dom';
+import { parse } from 'url';
 
 interface AppProps { 
 
@@ -60,9 +63,12 @@ export interface AppState {
 
 };
 let result = {} as Response;
-
-export default class  App extends Component<AppProps,AppState> {
-
+export default class  App extends React.Component<AppProps,AppState> {
+  myRef:any
+  textInput: any;
+  AverageSal:any
+ 
+  textText:string='';
   constructor(props:any) {
     super(props);
     this.state = {
@@ -79,13 +85,18 @@ export default class  App extends Component<AppProps,AppState> {
       
     };
 
+    this.myRef = React.createRef(); 
+    this.textInput = React.createRef();
+    this.AverageSal = React.createRef();
+
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.sendEmail = this.sendEmail.bind(this);
+    this.ResetTextInput = this.ResetTextInput.bind(this);
   }
 
   handleChange(event:any) {
-    console.log(this.state.input)
+    // console.log(this.state.input)
     // console.log(this.state.input.Exp1998.substring(this.state.input.Exp1998.indexOf(".")+1))
     // console.log(this.state.input.Exp1998.substr(0, this.state.input.Exp1998.indexOf('.')+1)); 
     try{
@@ -121,7 +132,7 @@ export default class  App extends Component<AppProps,AppState> {
           break;
 
         case 'AverageSal':
-          input.AverageSal= event.target.value;
+          input.AverageSal=event.target.value === '' ? '' : parseFloat((event.target.value).split(' ').join('')).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1 ');
           this.callbackFunctionInput(input);
           break;
 
@@ -131,18 +142,18 @@ export default class  App extends Component<AppProps,AppState> {
           break;
 
         case 'SumOPV':
-          input.SumOPV=event.target.value;
+          input.SumOPV = event.target.value === '' ? '' : parseFloat((event.target.value).split(' ').join('')).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1 ');
           input.OPV= (this.state.opv).toString();
           this.callbackFunctionInput(input);
           break;
         case 'SumOPPV':
-          input.SumOPPV = event.target.value;
+          input.SumOPPV=event.target.value === '' ? '' : parseFloat((event.target.value).split(' ').join('')).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1 ');
           input.OPPV = (this.state.oppv).toString();
           this.callbackFunctionInput(input);
           break;
 
         case 'SumDPV':
-          input.SumDPV = event.target.value;
+          input.SumDPV=event.target.value === '' ? '' : parseFloat((event.target.value).split(' ').join('')).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1 ');
           input.DPV = (this.state.dpv).toString();
           this.callbackFunctionInput(input);
           break;
@@ -153,19 +164,23 @@ export default class  App extends Component<AppProps,AppState> {
           break;
 
         case 'EnlargeTenge':
-          input.EnlargeTenge = event.target.value;
+          input.EnlargeTenge=event.target.value === '' ? '' : parseFloat((event.target.value).split(' ').join('')).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1 ');
           input.EnlargeType = (this.state.typeSal).toString();
+          input.EnlargeSal = (this.state.enlarge).toString();
           this.callbackFunctionInput(input);
           break;
 
         case 'EnlargePercent':
           input.EnlargePercent = event.target.value;
           input.EnlargeType = (this.state.typeSal).toString();
+          input.EnlargeSal = (this.state.enlarge).toString();
+          if (parseInt(event.target.value) < 0) input.EnlargePercent = '0';
+          if (parseInt(event.target.value) > 100) input.EnlargePercent  = '100';
           this.callbackFunctionInput(input);
           break;
                 
         case 'SumDPVtenge':
-          input.SumDPVtenge=event.target.value;
+          input.SumDPVtenge=event.target.value === '' ? '' : parseFloat((event.target.value).split(' ').join('')).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1 ');
           input.SumDPVtype = (this.state.typeDpv).toString();
           this.callbackFunctionInput(input);
           break;
@@ -173,22 +188,26 @@ export default class  App extends Component<AppProps,AppState> {
         case 'SumDPVpercent':
           input.SumDPVpercent=event.target.value;
           input.SumDPVtype = (this.state.typeDpv).toString();
+          if (parseInt(event.target.value) < 0) input.SumDPVpercent = '0';
+          if (parseInt(event.target.value) > 100) input.SumDPVpercent  = '100';
           this.callbackFunctionInput(input);
           break;
 
         case 'PayoutMonth':
-          input.PayoutMonth = event.target.value;
+          input.PayoutMonth=event.target.value === '' ? '' : parseFloat((event.target.value).split(' ').join('')).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1 ');
           this.callbackFunctionInput(input);
           break;
 
         case 'PayoutAge':
           input.PayoutAge = event.target.value;
+          if (parseInt(event.target.value) < 0) input.PayoutAge = '0';
+          if (parseInt(event.target.value) > 100) input.PayoutAge  = '100';
           this.callbackFunctionInput(input);
           break;
 
         case 'BirthDate':
           console.log(event.target.value);
-          input.BirthDate = event.target.value;
+          input.BirthDate = this.formatDate(event.target.value);
           this.callbackFunctionInput(input);
           break;
           
@@ -198,53 +217,167 @@ export default class  App extends Component<AppProps,AppState> {
     }
     catch(ex){console.error(ex)}
   }
+  //сброс всех полей (выходных / входных)
+  ResetTextInput() {
+    try{
+      this.textInput.current.reset();
+    }
+    catch(ex){console.error(ex)}
+  }
 
+  //валидация полей до расчета
+  isValidInputs():boolean{
+
+    let input= this.state.input;
+    console.log(input);
+    if(this.state.input.EnlargeTenge===''){
+      input.EnlargeTenge='0'
+      this.callbackFunctionInput(input);
+    }
+    if(this.state.input.EnlargePercent===''){
+      input.EnlargePercent='0'
+      this.callbackFunctionInput(input);
+    }
+    if(this.state.input.SumDPVtenge===''){
+      input.SumDPVtenge='0';
+      this.callbackFunctionInput(input);
+    }
+    if(this.state.input.SumDPVpercent===''){
+      input.SumDPVpercent='0';
+      this.callbackFunctionInput(input);
+    }
+    if(this.state.input.AverageSal===''){
+      input.AverageSal='0';
+      this.callbackFunctionInput(input);
+    }
+    if(this.state.input.SumOPV===''){
+      input.SumOPV='0';
+      this.callbackFunctionInput(input);
+    }
+    if(this.state.input.SumOPPV===''){
+      input.SumOPPV='0';
+      this.callbackFunctionInput(input);
+    }
+    if(this.state.input.SumDPV===''){
+      input.SumDPV='0';
+      this.callbackFunctionInput(input);
+    }
+    if(this.state.input.PayoutAge===''){
+      input.PayoutAge='0';
+      this.callbackFunctionInput(input);
+    }
+    if(this.state.input.PayoutMonth===''){
+      input.PayoutMonth='0';
+      this.callbackFunctionInput(input);
+    }
+    return true
+  }
+
+  // возвращает json входных данных без раздярностей
+  revmoveSpaceBetweenDigits(input:any){
+    input.AverageSal=input.AverageSal.split(' ').join('');
+    input.SumOPV=input.SumOPV.split(' ').join('');
+    input.SumOPPV=input.SumOPPV.split(' ').join('');
+    input.SumDPV=input.SumDPV.split(' ').join('');
+    input.EnlargeTenge=input.EnlargeTenge.split(' ').join('');
+    input.SumDPVtenge=input.SumDPVtenge.split(' ').join('');
+    input.PayoutMonth=input.PayoutMonth.split(' ').join('');
+    return JSON.stringify(input);
+  }
+
+  //расчитать результаты 
   handleSubmit(event:any) {
     try {
-      this.setState({loader:true});
-      console.log(this.state.input)
-      axios.post(`https://mobile.enpf.kz/JasperReports/api/EnpfCalculator2`, JSON.stringify(this.state.input))
-      .then(res => {
-        this.setState({loader:false});
-        if(res.data.code === "0"){
-          
-          result =  JSON.parse(base64.decode(res.data.message));
-          this.callbackFunction(result);
-          this.setState({button:false});
-        }
-        if(res.data.code === "-1"){
-          Swal.fire('Ошибка', res.data.message, 'error')
+       if(this.isValidInputs()===true){
+         
+          this.setState({loader:true});
+          axios.post(`https://mobile.enpf.kz/JasperReports/api/EnpfCalculator2`, this.revmoveSpaceBetweenDigits(this.state.input) )
+          .then(res => {
+            this.setState({loader:false});
+            if(res.data.code === "0"){
+              
+              result =  JSON.parse(base64.decode(res.data.message));
+              this.callbackFunction(result);
+              this.setState({button:false});
+              console.log(result)
+              
+            
+              if(result.PensionAnnuityAsk==="1"||result.PensionAnnuityAsk==="3"||result.PensionAnnuityAsk==="4"){
+                let scen1='в рамках пессимистичного, реалистичного и оптимистичного сценариев';
+                let scen3='в рамках реалистичного и оптимистичного сценариев';
+                let scen4='в рамках оптимистичного сценария';
 
-        }
-        
-      }).catch((e)=>{
-        console.error(e)
-        event.preventDefault();
-      })
+                let text = 'Уведомляем Вас о том, что прогнозная сумма Ваших пенсионных накоплений к достижению пенсионного возраста является достаточной для приобретения пожизненного пенсионного аннуитета (прим.: Пожизненный пенсионный аннуитет – это договор, который позволяет Вам получать пожизненные ежемесячные пенсионные выплаты).'+(result.PensionAnnuityAsk==='1'? scen1 :result.PensionAnnuityAsk==="3" ? scen3 : scen4 )+' Желаете рассчитать пожизненный пенсионный аннуитет?';
+                Swal.fire({
+                  text: text,
+                  icon: 'warning',
+                  showCancelButton: true,
+                  confirmButtonColor: '#2A6BCB',
+                  cancelButtonColor: '#d33',
+                  confirmButtonText: 'Да',
+                  cancelButtonText:'Нет'
+                }).then((con) => {
+                  
+                  if (con.value) {
+                    let val=this.state.input;
+                    val.CalcType='2';
+                    this.setState({loader:true});
+                    axios.post(`https://mobile.enpf.kz/JasperReports/api/EnpfCalculator2`, JSON.stringify(val))
+                    .then(res => {
+                      this.setState({loader:false});
+                      if(res.data.code === "0"){
+                        
+                        let result =  JSON.parse(base64.decode(res.data.message));
+                        this.callbackFunction(result);
+                        this.setState({button:false});
+                      }
+                      if(res.data.code === "-1"){
+                        Swal.fire('Ошибка', res.data.message, 'error')
+              
+                      }
+                    }).catch((ex)=>{  Swal.fire('Ошибка', res.data.message, 'error')});
+
+                  }
+                })
+              }
+            }
+            if(res.data.code === "-1"){
+              Swal.fire({
+                title:'Ошибка', 
+                text:res.data.message,
+                icon: 'error',
+                confirmButtonColor: '#2A6BCB'})
+            }
+            
+          }).catch((e)=>{
+            console.error(e)
+            event.preventDefault();
+          })
+      }
+      else {
+        Swal.fire({
+          title:'Упс', 
+          text:'Необходимо заполнить обязательные поля',
+          icon: 'warning',
+          confirmButtonColor: '#2A6BCB'});
+      }
+     
     }
     catch(ex){console.error(ex)}
     event.preventDefault();
   }
 
+  //обновить выходные параметры
   callbackFunction = (childData:Response) => {
     this.setState({output: childData})
   };
 
+  //обновить входные параметры
   callbackFunctionInput = (childData:any) => {
     this.setState({input: childData})
   };
 
-  callbackClear = () => {
-   this.setState({input:inputObj,output:outputObj,button:true,});
-  };
-
-  clearAll(){
-    try{
-    this.callbackClear()
-    }
-    catch(ex){console.log(ex)}
-  }
-
+  //отправка результата на почту
   async sendEmail(){
     console.log(this.state.input)
 
@@ -258,6 +391,7 @@ export default class  App extends Component<AppProps,AppState> {
       cancelButtonText:'Отмена',
       cancelButtonColor:'#f0506e',
       confirmButtonText: ' Отправить',
+      confirmButtonColor:'#2A6BCB',
       showLoaderOnConfirm: true,
       preConfirm: (login) => {
       
@@ -276,7 +410,7 @@ export default class  App extends Component<AppProps,AppState> {
           
         }).catch((e)=>{
           Swal.showValidationMessage(
-             `${e}`
+             `${e}+333`
             )
         })
       },
@@ -287,16 +421,36 @@ export default class  App extends Component<AppProps,AppState> {
       }
     })
   }
-
+  //спинер загрузки 
   Loader (){
      return(
-      <div className="uk-overlay-primary uk-position-cover">
+      <div className="uk-overlay-primary uk-position-cover" >
           <div className="uk-position-center">
             <div uk-spinner="ratio: 2" ></div>
           </div>
       </div>
      )
   }
+  // конверт формата даты 12.12.1989
+  formatDate (input:any) {
+    var datePart = input.match(/\d+/g),
+    year = datePart[0], // get only two digits
+    month = datePart[1], day = datePart[2];
+  
+    return day+'.'+month+'.'+year;
+  }
+ 
+  InputTenge = () => (
+   
+  <input id="EnlargeTenge" type="text" placeholder="*** *** ***" onChange={this.handleChange} value={this.state.input.EnlargeTenge} className="uk-input uk-form-small uk-text-right uk-width-1-2"/>
+
+)
+  InputPercent= () => (
+  <input id="EnlargePercent" type="text" placeholder="**" onChange={this.handleChange} value={this.state.input.EnlargePercent} className="uk-input uk-form-small uk-text-right uk-width-1-2"/>
+
+)
+
+
 
 render(){
 
@@ -304,104 +458,111 @@ render(){
     
     <div className="App">
   
-     <div className="uk-margin-small-top uk-container uk-container-xsmall">
-        <div className="uk-card uk-card-default">
+     <div className="uk-margin-small-top ">
+
         
-          <form onSubmit={this.handleSubmit} className="uk-margin-small-left uk-margin-small-right">
+          <form className="uk-text-left" ref={this.textInput}>
 
             <h4 className="uk-heading-line uk-text-center"><span>Входные данные</span></h4>
-
-              <div className="uk-flex uk-flex-left uk-text-small uk-margin-small-bottom">
-                <span className="uk-text-primary uk-margin-small-right uk-margin-small-top uk-heading-bullet">Пол:</span>
-                <div uk-switcher="animation: uk-animation-fade; toggle: > *" className="uk-margin-remove-top ">
+              <div className="backGrey">
+                <span className="uk-text-secondary uk-text-small uk-text-normal uk-margin-small-left ">Пол:</span>
+                <div uk-switcher="animation: uk-animation-fade; toggle: > *" className="uk-margin-remove-top uk-margin-small-bottom uk-margin-small-left">
+               
                     <button id="male" className="uk-button uk-button-default uk-button-small uk-text-lowercase" type="button" onClick={this.handleChange} >Мужской</button>
                     <button id="female" className="uk-button uk-button-default uk-button-small uk-text-lowercase" type="button" onClick={this.handleChange}>Женский</button>
                 </div>
               </div>
 
-              <div className="uk-flex uk-flex-left uk-text-small uk-margin-small-bottom">
-                <span className="uk-text-primary uk-margin-small-right uk-margin-small-top uk-heading-bullet">Дата рождения:</span>
-                <input id="BirthDate" className="uk-input  uk-width-1-2 uk-form-small" type="date"/>
+              <div className="uk-margin-small-bottom">
+                <div className="uk-text-secondary uk-text-small uk-text-normal uk-margin-small-left">Дата рождения:</div>
+                <input id="BirthDate" className="uk-input  uk-width-1-2 uk-form-small uk-margin-small-left" type="date" onChange={this.handleChange} />
+              </div>
+              <div className="backGrey">
+                <InputExp id1="exp1998year" id2="exp1998month" handleChange={this.handleChange} title="Трудовой стаж до 1998 года:"/>
+              </div>
+              
+              <div className="">
+                <InputExp id1="expYear" id2="expYearM" handleChange={this.handleChange} title="Трудовой стаж с 1998 года:"/>
               </div>
 
-              <InputExp id1="exp1998year" id2="exp1998month" handleChange={this.handleChange} title="Трудовой стаж до 1998 года:"/>
+              <div className="backGrey">
+                <InputSalary id="AverageSal"  value={this.state.input.AverageSal} handleChange={this.handleChange} title="Средняя заработная плата в месяц:"/>
+              <div>{this.textText}</div>
+              </div>
 
-              <InputExp id1="expYear" id2="expYearM" handleChange={this.handleChange} title="Стаж в накопительной пенсионной системе с 1998 года:"/>
+              <div className="uk-margin-small-bottom">
 
-              <InputSalary id="AverageSal" handleChange={this.handleChange} title="Средняя заработная плата в месяц, применяемая для исчисления (брутто): "/>
-
-              <div className="uk-flex uk-flex-column">
-
-                <span className="uk-text-small uk-text-primary uk-heading-bullet uk-text-left">Периодичность взносов: <InfoBlock text="Добровольные пенсионные взносы"/></span>
-
-                <SelectPeriod change={this.handleChange} id="PeriodPayOPV" classN={"uk-select uk-form-small uk-margin-small-top uk-margin-small-bottom uk-text-right uk-width-1-5 "}/>
+                <span className="uk-text-secondary uk-text-small uk-text-normal uk-margin-small-left">Периодичность взносов: <InfoBlock text="Добровольные пенсионные взносы"/></span>
+                <div className="uk-margin-small-left">
+                  <SelectPeriod change={this.handleChange} id="PeriodPayOPV" classN={"uk-select uk-form-small uk-text-right uk-width-1-5 "}/> 
+                </div>
                 
               </div>
-              <ul uk-accordion="multiple: true;animation:true" className="uk-margin-remove-top uk-text-left " >
-                <li>
-                    <a className="uk-accordion-title uk-text-small uk-text-primary " href="#" onClick={()=>this.setState({enlarge:!this.state.enlarge})}>
-                      <span className="uk-heading-bullet">С учетом ежегодного роста заработной платы:</span> 
-                    </a>
-                    <div className="uk-accordion-content">
 
-                      <div className="uk-text-small uk-flex uk-flex-left uk-margin-remove">
-                          {this.state.typeSal===true? 
-                            <input id="EnlargeTenge" type="number" placeholder="*** *** ***" onChange={this.handleChange} className="uk-input uk-form-small uk-text-right uk-width-1-2"/>
-                          : <input id="EnlargePercent" type="number" placeholder="**" onChange={this.handleChange} className="uk-input uk-form-small uk-text-right uk-width-1-2"/>
-                          }
-                          <div uk-switcher="animation: uk-animation-fade; toggle: > *" className="uk-margin-remove-top uk-margin-small-left ">
-                            <button className="uk-button uk-button-default uk-button-small uk-text-lowercase" type="button" onClick={()=> this.setState({typeSal:true})}><span>&#8376;</span></button>
-                            <button className="uk-button uk-button-default uk-button-small uk-text-lowercase" type="button" onClick={()=> this.setState({typeSal:false})}>%</button>
-                        </div>
+              <ul uk-accordion="multiple: true;animation:true" className="uk-margin-remove uk-text-left " >
+                <li className="uk-margin-small-bottom"> 
+                    <a className="uk-accordion-title backGrey" href="#" onClick={()=>this.setState({enlarge:!this.state.enlarge})}>
+                      <span className="uk-text-secondary uk-text-small uk-text-normal uk-margin-small-left">С учетом ежегодного роста заработной платы:</span> 
+                    </a>
+                    <div className="uk-accordion-content uk-text-small uk-flex uk-flex-left uk-margin-small-top uk-margin-small-left uk-margin-small-bottom">
+                        {this.state.typeSal=== true ? this.InputTenge() : this.InputPercent()}
+                        
+                        <div uk-switcher="animation: uk-animation-fade; toggle: > *" className="uk-margin-remove-top uk-margin-small-left ">
+                          <button className="uk-button uk-button-default uk-button-small uk-text-lowercase" type="button" onClick={()=> {this.setState({typeSal:true})  }}><span>&#8376;</span></button>
+                          <button className="uk-button uk-button-default uk-button-small uk-text-lowercase" type="button" onClick={()=> this.setState({typeSal:false})}>%</button>
                         </div>
 
                     </div>
                 </li>
               </ul>
               <ul uk-accordion="multiple: true;animation:true" className="uk-margin-remove-top uk-text-left " >
-                <li  className="uk-open " >
-                    <a className="uk-accordion-title uk-text-small uk-text-primary " href="#" onClick={()=>this.setState({opv:!this.state.opv})}>
-                      <span className="uk-heading-bullet">Обязательные пенсионные взносы (ОПВ):</span> 
+                <li  className="uk-open uk-margin-small-bottom" >
+                    <a className="uk-accordion-title backGrey" href="#" onClick={()=>this.setState({opv:!this.state.opv})}>
+                      <span className="uk-text-secondary uk-text-small uk-text-normal uk-margin-small-left">Обязательные пенсионные взносы (ОПВ):</span> 
                     </a>
-                    <div className="uk-accordion-content">
-                      <InputSum id="SumOPV" handleChange={this.handleChange}/>
+                    <div className="uk-accordion-content uk-margin-remove-top">
+                      <InputSum id="SumOPV" value={this.state.input.SumOPV} handleChange={this.handleChange}/>
+                    
+
+                    <ul uk-accordion="multiple: true;animation:true" className="uk-margin-small-top uk-text-left " >
+                      <li className="uk-margin-remove-top">
+                          <a  className="uk-accordion-title backGrey" href="#" onClick={()=>this.setState({oppv:!this.state.oppv})}>
+                            <span className="uk-text-secondary uk-text-small uk-text-normal uk-margin-small-left">Обязательные профессиональные пенсионные взносы (ОППВ)</span> 
+                          </a>
+                          <div className="uk-accordion-content uk-margin-remove-top ">
+                              <InputSum id="SumOPPV" value={this.state.input.SumOPPV} handleChange={this.handleChange}/>
+                          </div>
+                      </li>
+                    </ul>
                     </div>
                 </li>
 
-                <li>
-                    <a  className="uk-accordion-title uk-text-small uk-text-primary" href="#" onClick={()=>this.setState({oppv:!this.state.oppv})}>
-                      <span className="uk-heading-bullet">Обязательные профессиональные пенсионные взносы (ОППВ)</span> 
-                    </a>
-                    <div className="uk-accordion-content">
-                        <InputSum id="SumOPPV" handleChange={this.handleChange}/>
-                    </div>
-                </li>
+                
 
-                <li>
-                    <a className="uk-accordion-title uk-text-small uk-text-primary" href="#" onClick={()=>this.setState({dpv:!this.state.dpv})}>
-                      <span className="uk-heading-bullet">Добровольные пенсионные взносы (ДПВ)</span>
+                <li className="uk-margin-remove-top  ">
+                    <a className="uk-accordion-title backGrey" href="#" onClick={()=>this.setState({dpv:!this.state.dpv})}>
+                      <span className="uk-text-secondary uk-text-small uk-text-normal uk-margin-small-left">Добровольные пенсионные взносы (ДПВ)</span>
                     </a>
-                    <div className="uk-accordion-content">
-                        <InputSum id="SumDPV" handleChange={this.handleChange}/>
+                    <div className="uk-accordion-content uk-margin-remove-top">
+                        <InputSum id="SumDPV" value={this.state.input.SumDPV} handleChange={this.handleChange}/>
 
-                        <div className="uk-flex uk-flex-left uk-margin-small-top uk-text-small">
-                          <div className="uk-flex uk-flex-column">
-                            <span>возраст получения:</span>
-                            <input type="text" id="PayoutAge" onChange={this.handleChange}  className="uk-text-right uk-width-1-2 uk-margin-small-top uk-width-1-2 uk-input uk-form-small"/>
+                        <div className="uk-flex uk-flex-column uk-margin-small-left">
+                            <span className="uk-text-secondary uk-text-normal uk-text-small">возраст получения:</span>
+                            <input type="text" id="PayoutAge" onChange={this.handleChange}  ref={this.myRef} className="uk-text-right uk-width-1-2 uk-width-1-5 uk-input uk-form-small"/>
                           </div>
 
                           <div className="uk-flex uk-flex-column uk-margin-small-left">
-                            <span>периодичность взносов:</span>
-                             <SelectPeriod  handleChange={this.handleChange} id="PeriodPayDPV" classN="uk-select uk-form-small uk-margin-small-top uk-margin-small-bottom uk-text-right uk-width-1-2"/>
+                            <span className="uk-text-secondary uk-text-normal uk-text-small">периодичность взносов:</span>
+                             <SelectPeriod  change={this.handleChange} id="PeriodPayDPV" classN="uk-select uk-form-small uk-margin-small-bottom uk-text-right uk-width-1-5"/>
                           </div>
-                        </div>
+                       
 
-                        <div className="uk-flex uk-flex-left uk-flex-column uk-text-small">
-                          <span>сумма добровольных взносов:</span>
+                        <div className="uk-flex uk-flex-left uk-flex-column uk-text-small uk-margin-small-left">
+                          <span className="uk-text-secondary uk-text-normal">сумма добровольных взносов:</span>
                             <div className="uk-text-small uk-flex uk-flex-left uk-margin-remove">
                             {this.state.typeDpv===true? 
-                              <input id="SumDPVtenge" type="number" placeholder="*** *** ***" onChange={this.handleChange} className="uk-input uk-form-small uk-text-right uk-width-1-2"/>
-                            : <input id="SumDPVpercent" type="number" placeholder="**" onChange={this.handleChange} className="uk-input uk-form-small uk-text-right uk-width-1-2"/>
+                              <input id="SumDPVtenge" type="text" value={this.state.input.SumDPVtenge} placeholder="*** *** ***" onChange={this.handleChange}  className="uk-input uk-form-small uk-text-right uk-width-1-2"/>
+                            : <input id="SumDPVpercent" type="text" value={this.state.input.SumDPVpercent} placeholder="**" onChange={this.handleChange} className="uk-input uk-form-small uk-text-right uk-width-1-2"/>
                             }
                             <div uk-switcher="animation: uk-animation-fade; toggle: > *" className="uk-margin-remove-top uk-margin-small-left ">
                               <button className="uk-button uk-button-default uk-button-small uk-text-lowercase" type="button" onClick={()=> this.setState({typeDpv:true})}><span>&#8376;</span></button>
@@ -410,11 +571,11 @@ render(){
                           </div>
                         </div>
 
-                        <div className="uk-flex uk-flex-left uk-flex-column uk-text-small uk-margin-small-top">
-                          <span>желаемая ежемесячная выплата в тенге:
+                        <div className="uk-flex uk-flex-left uk-flex-column uk-text-small uk-margin-small-top uk-margin-small-left">
+                          <span className="uk-text-secondary uk-text-normal">желаемая ежемесячная выплата в тенге:
                             <InfoBlock text="Добровольные пенсионные взносыДобровольные пенсионные взносыДобровольные пенсионные взносы"/>
                           </span>
-                          <input id="PayoutMonth" type="text" placeholder="*** *** ***" className="uk-text-right uk-width-1-2 uk-margin-small-top uk-width-1-2 uk-input uk-form-small" onChange={this.handleChange}/>
+                          <input id="PayoutMonth" type="text" placeholder="*** *** ***" value={this.state.input.PayoutMonth} className="uk-text-right uk-width-1-2 uk-width-1-2 uk-input uk-form-small" onChange={this.handleChange}/>
                         </div>
 
 
@@ -423,23 +584,29 @@ render(){
             </ul>
 
             <div className="uk-flex uk-flex-around">
-              <button  onClick={this.clearAll} className = "uk-button uk-button-danger uk-margin-small-bottom uk-button-small uk-text-center" disabled={this.state.button}>Сбросить</button>  
+              <button  onClick={this.ResetTextInput} className = "uk-button uk-button-danger uk-margin-small-bottom uk-button-small uk-text-center" >Сбросить</button>  
               <button  onClick={this.handleSubmit} className = "uk-button uk-button-primary uk-margin-small-bottom uk-button-small uk-text-center" >Рассчитать</button>   
             </div>  
 
           </form>
-        </div>
 
-        <div className="uk-card uk-card-default uk-margin-small-top uk-margin-small-bottom">
-          <form  className="uk-margin-small-left uk-margin-small-right">
-            <h4 className="uk-heading-line uk-text-center "><span>Прогноз вашей пенсии</span></h4>
+        <div className="diveder"> 
 
-            <div className="uk-matgin-remove-top">
-              <div className="uk-width-auto ">
+        </div>     
+          <form  className="uk-margin-small-top" ref={this.textInput}>
+            <h4 className="uk-heading-line uk-text-center uk-margin-remove-bottom "><span>Прогноз вашей пенсии</span></h4>
+            <Tabs 
+              data={this.state.output}
+              onClick={this.sendEmail}
+              disabled={this.state.button}
+            />    
+{/* 
+            <div className="uk-margin-small-top ">
+              <div className="uk-width-expand">
                   <ul className="uk-tab-center uk-margin-remove uk-padding-remove uk-flex-center" uk-tab="connect: #datas">
                       <li><a className="uk-text-small uk-text-capitalize uk-margin-remove-left uk-margin-remove-right" href="#">Пессимистичный</a></li>
-                      <li><a className="uk-text-small uk-text-capitalize"  href="#">Реалистичный</a></li>
-                      <li><a className="uk-text-small uk-text-capitalize"  href="#">Оптимистичный</a></li>
+                      <li><a className="uk-text-small uk-text-capitalize uk-margin-remove-left uk-margin-remove-right"  href="#">Реалистичный</a></li>
+                      <li><a className="uk-text-small uk-text-capitalize uk-margin-remove-left uk-margin-remove-right"  href="#">Оптимистичный</a></li>
                       
                   </ul>
               </div>
@@ -477,19 +644,16 @@ render(){
                       
                   </ul>
               </div>
-              <div className="uk-flex uk-flex-around uk-margin-remove-top">
-                {/* <a onClick={this.sendEmail} className="uk-button uk-button-default uk-button-small uk-margin-small-bottom uk-margin-small-top">отправить на e-mail</a> */}
-                <a href="" className="uk-icon-button" uk-totop="true" uk-scroll="true"></a>
-              </div>
+              
             </div>
-          
+           */}
           </form>        
-   
-
-        </div>
-     
+          <div className="uk-flex uk-flex-around uk-margin-remove-top">
+                <button className="uk-icon-button" uk-totop="true" uk-scroll="true"></button>
+          </div>
+       
       </div>
-      {this.state.loader === true ? this.Loader() : null}
+      {/* {this.state.loader === true ? this.Loader() : null} */}
     </div>
   );
 }

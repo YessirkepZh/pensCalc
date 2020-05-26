@@ -7,16 +7,16 @@ function renderTableData(data:any) {
        const { Year, Age, BasicPension, SolidarityPension,OPV,OPPV,DPV,Total,KoefZam,PensAnnuity } = dat //destructuring
        return (
           <tr>
-             <td>{Year}</td>
-             <td>{Age}</td>
-             <td>{BasicPension}</td>
-             <td>{SolidarityPension}</td>
-             <td>{OPV}</td>
-             <td>{OPPV}</td>
-             <td>{DPV}</td>
-             <td>{Total}</td>
-             <td>{KoefZam}</td>
-             <td>{PensAnnuity}</td>
+             <td key='0'>{Year}</td>
+             <td key='1'>{Age}</td>
+             <td key='2'>{BasicPension}</td>
+             <td key='3'>{SolidarityPension}</td>
+             <td key='4'>{OPV}</td>
+             <td key='5'>{OPPV}</td>
+             <td key='6'>{DPV}</td>
+             <td key='7'>{Total}</td>
+             <td key='8'>{KoefZam}</td>
+             <td key='9'>{PensAnnuity}</td>
           </tr>
        )
     })
@@ -119,86 +119,99 @@ export default ({ data ,onClick,disabled}:any) =>
 
 <div className="uk-text-small">
 
-  <div className="uk-flex uk-flex-bottom uk-text-left">
-      <div className="uk-width-expand uk-heading-bullet" uk-leader="true" ><span className="uk-text-primary  titleRes">возраст и дата выхода на пенсию (ОПВ/ОППВ) <InfoBlock text="Добровольные пенсионные взносы"/></span></div>
-<div className="uk-text-small"><span className="uk-text-bold uk-text-emphasis ">{data.Retirement.Age ==='' ? '**':data.Retirement.Age}</span> лет <span className="uk-text-bold uk-text-emphasis ">{data.Retirement.Dt ==='' ? '**':data.Retirement.Dt}</span></div>
+  <div className="uk-flex uk-flex-bottom uk-text-left uk-margin-small-left uk-margin-small-right">
+    <div className="uk-width-expand" uk-leader="true" ><span className="uk-text-secondary uk-text-normal  uk-text-small">возраст и дата выхода на пенсию (ОПВ/ОППВ) <InfoBlock text="Добровольные пенсионные взносы"/></span></div>
+    <div className="uk-text-small"><span className="uk-text-bold uk-text-emphasis ">{data.Retirement.Age ==='' ? '**':data.Retirement.Age}</span> лет <span className="uk-text-bold uk-text-emphasis ">{data.Retirement.Dt ==='' ? '**':data.Retirement.Dt}</span></div>
   </div>
-  
-  <div className="uk-flex uk-flex-bottom uk-margin-small-top uk-text-left" >
-      <div className="uk-width-expand uk-heading-bullet" uk-leader="true" >
-        <span className="uk-text-primary  titleRes">возраст и дата начала получения выплат по ДПВ <InfoBlock text="Добровольные пенсионные взносыДобровольные пенсионные взносыДобровольные пенсионные взносы"/></span>
+  <hr className="uk-margin-remove"/>
+
+  <div className="uk-flex uk-flex-bottom uk-text-left uk-margin-small-left uk-margin-small-right" >
+      <div className="uk-width-expand" uk-leader="true" >
+        <span className="uk-text-secondary uk-text-normal uk-text-small">возраст и дата начала получения выплат по ДПВ <InfoBlock text="Добровольные пенсионные взносыДобровольные пенсионные взносыДобровольные пенсионные взносы"/></span>
       </div>
       <div className="uk-text-small uk-text-right">
         <span className="uk-text-bold uk-text-emphasis "> {data.Retirement.Age ==='' ? '**':data.Retirement.Age}</span> лет <span className="uk-text-bold uk-text-emphasis ">{data.Retirement.Dt ==='' ? '**':data.Retirement.Dt}</span>
       </div>
   </div>
+  <hr className="uk-margin-remove"/>
 
-  <div className="uk-flex uk-flex-bottom uk-margin-small-top uk-text-left" >
-      <div className="uk-width-expand uk-heading-bullet" uk-leader="true" ><span className="uk-text-primary  titleRes">количество лет до исчерпания накоплений по ОПВ <InfoBlock text="Добровольные пенсионные взносы"/></span></div>
-<div className="uk-text-emphasis"><span className="uk-text-bold uk-text-emphasis ">{data.NumOfYearsBeforeExhAccumOPV === '' ? '**' :data.NumOfYearsBeforeExhAccumOPV}</span> лет</div>
+  <div className="uk-text-left uk-text-secondary uk-margin-small-left uk-margin-small-right uk-text-small">количество лет до исчерпания накоплений по:</div>
+  
+  <div className="uk-flex uk-flex-bottom  uk-text-left uk-margin-medium-left uk-margin-medium-left uk-margin-small-right" >
+      <div className="uk-width-expand" uk-leader="true" ><span className="uk-text-secondary uk-text-normal uk-text-small">ОПВ <InfoBlock text="Добровольные пенсионные взносы"/></span></div>
+      <div className="uk-text-emphasis"><span className="uk-text-bold uk-text-emphasis ">{data.NumOfYearsBeforeExhAccumOPV === '' ? '**' :data.NumOfYearsBeforeExhAccumOPV}</span> лет</div>
   </div>
 
-  <div className="uk-flex uk-flex-bottom uk-margin-small-top uk-text-left">
-      <div className="uk-width-expand uk-heading-bullet" uk-leader="true" ><span className="uk-text-primary  titleRes">количество лет до исчерпания накоплений по ОППВ <InfoBlock text="Добровольные пенсионные взносы"/></span></div>
+  <div className="uk-flex uk-flex-bottom uk-margin-small-top uk-text-left uk-margin-medium-left uk-margin-small-right">
+      <div className="uk-width-expand" uk-leader="true" ><span className="uk-text-secondary uk-text-normal uk-text-small">ОППВ <InfoBlock text="Добровольные пенсионные взносы"/></span></div>
       <div className="uk-text-small"><span className="uk-text-bold uk-text-emphasis ">{data.NumOfYearsBeforeExhAccumOPPV === '' ? '**' :data.NumOfYearsBeforeExhAccumOPPV}</span> лет</div>
   </div>
 
-  <div className="uk-flex uk-flex-bottom uk-margin-small-top uk-text-left">
-      <div className="uk-width-expand uk-heading-bullet" uk-leader="true" ><span className="uk-text-primary  titleRes">количество лет до исчерпания накоплений по ДПВ <InfoBlock text="Добровольные пенсионные взносы"/></span></div>
+  <div className="uk-flex uk-flex-bottom uk-margin-small-top uk-text-left uk-margin-medium-left uk-margin-small-right">
+      <div className="uk-width-expand" uk-leader="true" ><span className="uk-text-secondary uk-text-normal  uk-text-small">ДПВ <InfoBlock text="Добровольные пенсионные взносы"/></span></div>
       <div className="uk-text-small"><span className="uk-text-bold uk-text-emphasis ">{data.NumOfYearsBeforeExhAccumDPV === '' ? '**' :data.NumOfYearsBeforeExhAccumDPV}</span> лет</div>
   </div>
+  <hr className="deviderRes"/>
 
-  <div className="uk-flex uk-flex-bottom uk-margin-small-top uk-text-left">
-      <div className="uk-width-expand uk-heading-bullet" uk-leader="true" ><span className="uk-text-primary ">солидарная пенсия, тг/мес. <InfoBlock text="Добровольные пенсионные взносы"/></span></div>
+  <div className="uk-flex uk-flex-bottom uk-text-left uk-margin-small-left uk-margin-small-right">
+      <div className="uk-width-expand" uk-leader="true" ><span className="uk-text-secondary uk-text-normal uk-text-small">солидарная пенсия, тг/мес. <InfoBlock text="Добровольные пенсионные взносы"/></span></div>
       <div className="uk-text-emphasis uk-text-bold uk-text-small">{data.SolidarityPension === '' ? '***' : parseFloat(data.SolidarityPension).toLocaleString()} <span className="tenge">&#8376;</span></div>
   </div>
+  <hr className="deviderRes"/>
   
-  <div className="uk-flex uk-flex-bottom uk-margin-small-top uk-text-left">
-      <div className="uk-width-expand uk-heading-bullet" uk-leader="true" ><span className="uk-text-primary ">базовая пенсия, тг/мес. <InfoBlock text="Добровольные пенсионные взносы"/></span></div>
+  <div className="uk-flex uk-flex-bottom uk-text-left uk-margin-small-left uk-margin-small-right">
+      <div className="uk-width-expand" uk-leader="true" ><span className="uk-text-secondary uk-text-normal uk-text-small">базовая пенсия, тг/мес. <InfoBlock text="Добровольные пенсионные взносы"/></span></div>
       <div className="uk-text-emphasis uk-text-bold uk-text-small">{data.BasicPension === '' ? '***' : parseFloat(data.BasicPension).toLocaleString()} <span className="tenge">&#8376;</span></div>
   </div>
+  <hr className="deviderRes"/>
 
-  <div className="uk-flex uk-flex-bottom uk-margin-small-top uk-text-left">
-      <div className="uk-width-expand uk-heading-bullet" uk-leader="true" ><span className="uk-text-primary ">пенсия из ЕНПФ, тг/мес <InfoBlock text="Добровольные пенсионные взносы"/></span></div>
-      <div className="uk-text-emphasis uk-text-bold uk-text-small">{data.SolidarityPension === '' ? '***' : (parseFloat(data.EnpfPensionOPV)+parseFloat(data.EnpfPensionOPPV)+parseFloat(data.EnpfPensionDPV)).toLocaleString()} <span>&#8376;</span></div>
+  <div className="uk-flex uk-flex-bottom uk-text-left uk-margin-small-left uk-margin-small-right">
+      <div className="uk-width-expand" uk-leader="true" ><span className="uk-text-secondary uk-text-normal uk-text-small">пенсия из ЕНПФ, тг/мес <InfoBlock text="Добровольные пенсионные взносы"/></span></div>
+      <div className="uk-text-emphasis uk-text-bold uk-text-small">{data.SolidarityPension === '' ? '***' : (parseFloat(data.EnpfPensionOPV)+parseFloat(data.EnpfPensionOPPV)+parseFloat(data.EnpfPensionDPV)).toLocaleString()} <span className="tenge" >&#8376;</span></div>
   </div>
 
-    <span className="uk-margin-small-left uk-align-left">в том числе:</span>
 
-    <div className="uk-flex uk-flex-bottom uk-margin-small-top uk-margin-medium-left uk-text-left">
-        <div className="uk-width-expand uk-heading-bullet" uk-leader="true" ><span className="uk-text-primary titleRes">ОПВ <InfoBlock text="Добровольные пенсионные взносы"/></span></div>
+    <div className="uk-text-left uk-margin-small-left uk-margin-small-right uk-text-small">в том числе:</div>
+
+    <div className="uk-flex uk-flex-bottom  uk-text-left uk-margin-medium-left uk-margin-small-right">
+        <div className="uk-width-expand" uk-leader="true" ><span className="uk-text-secondary uk-text-normal uk-text-small">ОПВ <InfoBlock text="Добровольные пенсионные взносы"/></span></div>
         <div className="uk-text-emphasis uk-text-bold uk-text-small">{data.EnpfPensionOPV === '' ? '***' : parseFloat(data.EnpfPensionOPV).toLocaleString()} <span className="tenge">&#8376;</span></div>
     </div>
 
-     <div className="uk-flex uk-flex-bottom uk-margin-small-top uk-margin-medium-left uk-text-left">
-      <div className="uk-width-expand uk-heading-bullet" uk-leader="true" ><span className="uk-text-primary titleRes">ОППВ <InfoBlock text="Добровольные пенсионные взносы"/></span></div>
+    <div className="uk-flex uk-flex-bottom uk-margin-small-top uk-text-left uk-margin-medium-left uk-margin-small-right">
+      <div className="uk-width-expand" uk-leader="true" ><span className="uk-text-secondary uk-text-normal uk-text-small">ОППВ <InfoBlock text="Добровольные пенсионные взносы"/></span></div>
       <div className="uk-text-emphasis uk-text-bold uk-text-small">{data.EnpfPensionOPPV === '' ? '***' : parseFloat(data.EnpfPensionOPPV).toLocaleString()} <span className="tenge">&#8376;</span></div>
     </div>
 
-    <div className="uk-flex uk-flex-bottom uk-margin-small-top uk-margin-medium-left uk-text-left">
-        <div className="uk-width-expand uk-heading-bullet" uk-leader="true" ><span className="uk-text-primary titleRes">ДПВ <InfoBlock text="Добровольные пенсионные взносы"/></span></div>
+    <div className="uk-flex uk-flex-bottom uk-margin-small-top uk-text-left uk-margin-medium-left uk-margin-small-right">
+        <div className="uk-width-expand" uk-leader="true" ><span className="uk-text-secondary uk-text-normal uk-text-small">ДПВ <InfoBlock text="Добровольные пенсионные взносы"/></span></div>
         <div className="uk-text-emphasis uk-text-bold uk-text-small">{data.EnpfPensionDPV === '' ? '***' : parseFloat(data.EnpfPensionDPV).toLocaleString()} <span className="tenge">&#8376;</span></div>
     </div>
+  <hr className="deviderRes"/>
 
-  <div className="uk-flex uk-flex-bottom uk-margin-remove-top uk-text-left">
-      <div className="uk-width-expand uk-heading-bullet" uk-leader="true" ><span className="uk-text-primary  titleRes">Пенсионный аннуитет из страховой компании, тг/мес <InfoBlock text="Добровольные пенсионные взносы"/></span></div>
+  <div className="uk-flex uk-flex-bottom uk-margin-remove-top uk-text-left uk-margin-small-left uk-margin-small-right">
+      <div className="uk-width-" uk-leader="true" ><span className="uk-text-secondary uk-text-normal uk-text-small">Пенсионный аннуитет из страховой компании, тг/мес <InfoBlock text="Добровольные пенсионные взносы"/></span></div>
       <div className="uk-text-emphasis uk-text-bold uk-text-small uk-text-bottom">{data.PensionAnnuity === '' ? '***' : parseFloat(data.PensionAnnuity).toLocaleString()} <span className="tenge">&#8376;</span></div>
   </div>
+  <hr className="deviderRes"/>
 
-  <div className="uk-flex uk-flex-bottom uk-margin-small-top uk-text-left">
-      <div className="uk-width-expand uk-heading-bullet" uk-leader="true" ><span className="uk-text-primary titleRes uk-text-bold">ПОБЩАЯ СУММА, ТГ/МЕС. <InfoBlock text="Добровольные пенсионные взносы"/></span></div>
+  <div className="uk-flex uk-flex-bottom uk-margin-small-top uk-text-left uk-margin-small-left uk-margin-small-right">
+      <div className="uk-width-expand" uk-leader="true" ><span className="uk-text-secondary uk-text-small uk-text-bold">ПОБЩАЯ СУММА, ТГ/МЕС. <InfoBlock text="Добровольные пенсионные взносы"/></span></div>
       <div className="uk-text-emphasis uk-text-bold uk-text-small">{data.TotalSum === '' ? '***' : parseFloat(data.TotalSum).toLocaleString()} <span className="tenge">&#8376;</span></div>
   </div>
+  <hr className="deviderRes"/>
 
-  <div className="uk-flex uk-flex-bottom uk-margin-small-top uk-text-left">
-      <div className="uk-width-expand uk-heading-bullet" uk-leader="true" ><span className="uk-text-primary ">Прогнозируемая заработная плата <InfoBlock text="Добровольные пенсионные взносы"/></span></div>
+  <div className="uk-flex uk-flex-bottom uk-margin-small-top uk-text-left uk-margin-small-left uk-margin-small-right">
+      <div className="uk-width-expand" uk-leader="true" ><span className="uk-text-secondary uk-text-normal uk-text-small">Прогнозируемая заработная плата <InfoBlock text="Добровольные пенсионные взносы"/></span></div>
       <div className="uk-text-emphasis uk-text-bold uk-text-small">{data.SalaryBeforePension === '' ? '***' : parseFloat(data.SalaryBeforePension).toLocaleString()} <span className="tenge">&#8376;</span></div>
   </div>
+  <hr className="deviderRes"/>
 
-  <div className="uk-flex uk-flex-bottom uk-margin-small-top uk-text-left">
-      <div className="uk-width-expand uk-heading-bullet" uk-leader="true" ><span className="uk-text-primary uk-text-normal">Коэффициент замещения <InfoBlock text="Добровольные пенсионные взносы"/></span></div>
+  <div className="uk-flex uk-flex-bottom uk-margin-small-top uk-text-left uk-margin-small-left uk-margin-small-right">
+      <div className="uk-width-expand" uk-leader="true" ><span className="uk-text-secondary uk-text-bold uk-text-small">Коэффициент замещения <InfoBlock text="Добровольные пенсионные взносы"/></span></div>
       <div className="uk-text-emphasis uk-text-bold uk-text-small"> {data.Koef === '' ? '***' : parseFloat(data.Koef).toLocaleString()}%</div>
   </div>
+  <hr className="deviderRes"/>
 
   <div className="uk-flex uk-flex-around uk-margin-small-top">
       
