@@ -1,0 +1,25 @@
+{
+  "files": {
+    "main.css": "/pensCalc/static/css/main.e57ba918.chunk.css",
+    "main.js": "/pensCalc/static/js/main.46b5d35c.chunk.js",
+    "main.js.map": "/pensCalc/static/js/main.46b5d35c.chunk.js.map",
+    "runtime-main.js": "/pensCalc/static/js/runtime-main.8ab5360b.js",
+    "runtime-main.js.map": "/pensCalc/static/js/runtime-main.8ab5360b.js.map",
+    "static/css/2.f87e9f44.chunk.css": "/pensCalc/static/css/2.f87e9f44.chunk.css",
+    "static/js/2.2800acdf.chunk.js": "/pensCalc/static/js/2.2800acdf.chunk.js",
+    "static/js/2.2800acdf.chunk.js.map": "/pensCalc/static/js/2.2800acdf.chunk.js.map",
+    "index.html": "/pensCalc/index.html",
+    "precache-manifest.62bc2f2307878f36cba940c1374e2295.js": "/pensCalc/precache-manifest.62bc2f2307878f36cba940c1374e2295.js",
+    "service-worker.js": "/pensCalc/service-worker.js",
+    "static/css/2.f87e9f44.chunk.css.map": "/pensCalc/static/css/2.f87e9f44.chunk.css.map",
+    "static/css/main.e57ba918.chunk.css.map": "/pensCalc/static/css/main.e57ba918.chunk.css.map",
+    "static/js/2.2800acdf.chunk.js.LICENSE.txt": "/pensCalc/static/js/2.2800acdf.chunk.js.LICENSE.txt"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.8ab5360b.js",
+    "static/css/2.f87e9f44.chunk.css",
+    "static/js/2.2800acdf.chunk.js",
+    "static/css/main.e57ba918.chunk.css",
+    "static/js/main.46b5d35c.chunk.js"
+  ]
+}
