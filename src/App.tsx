@@ -1,4 +1,4 @@
-import React, { Component, useState, useRef } from 'react';
+import React, {  } from 'react';
 import InputSum from './components/InputSum';
 import InputExp from './components/InputExp';
 import InputSalary from './components/InputSalary';
@@ -12,10 +12,9 @@ import {Response,EnpfCalculatorOptimist,EnpfCalculatorRealist,EnpfCalculatorPess
 import Swal from 'sweetalert2';
 import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
 import './App.css';
-import { DatePicker } from "@material-ui/pickers";
 import Tabs from './components/Tabs'
-import ReactDOM from 'react-dom';
-import { parse } from 'url';
+import { Button } from '@material-ui/core';
+import Spinner from './components/Spinner';
 
 interface AppProps { 
 
@@ -208,7 +207,7 @@ export default class  App extends React.Component<AppProps,AppState> {
           break;
 
         case 'BirthDate':
-          console.log(event.target.value);
+          // console.log(event.target.value);
           input.BirthDate = this.formatDate(event.target.value);
           this.callbackFunctionInput(input);
           break;
@@ -231,7 +230,7 @@ export default class  App extends React.Component<AppProps,AppState> {
   isValidInputs():boolean{
 
     let input= this.state.input;
-    console.log(input);
+    // console.log(input);
     if(this.state.input.EnlargeTenge===''){
       input.EnlargeTenge='0'
       this.callbackFunctionInput(input);
@@ -301,7 +300,7 @@ export default class  App extends React.Component<AppProps,AppState> {
               result =  JSON.parse(base64.decode(res.data.message));
               this.callbackFunction(result);
               this.setState({button:false});
-              console.log(result)
+            
               window.scrollTo(0, this.scrollTarget.current.offsetTop) 
             
               if(result.PensionAnnuityAsk==="1"||result.PensionAnnuityAsk==="3"||result.PensionAnnuityAsk==="4"){
@@ -343,7 +342,9 @@ export default class  App extends React.Component<AppProps,AppState> {
 
                   }
                 })
+                window.scrollTo(0, this.scrollTarget.current.offsetTop) 
               }
+              
             }
             if(res.data.code === "-1"){
               Swal.fire({
@@ -383,7 +384,7 @@ export default class  App extends React.Component<AppProps,AppState> {
 
   //отправка результата на почту
   async sendEmail(){
-    console.log(this.state.input)
+   
 
     Swal.fire({
       text: 'Введите Ваш e-mail чтобы получить результаты прогноза пенсии и нажмите «Отправить»',
@@ -587,9 +588,13 @@ render(){
                 </li>
             </ul>
 
-            <div className="uk-flex uk-flex-around">
-              <button  onClick={this.ResetTextInput} className = "uk-button uk-button-danger uk-margin-small-bottom uk-button-small uk-text-center" >Сбросить</button>  
+            <div className="uk-flex uk-flex-around uk-margin-small-bottom">
+              {/* <button  onClick={this.ResetTextInput} className = "uk-button uk-button-danger uk-margin-small-bottom uk-button-small uk-text-center" >Сбросить</button>  
               <button  onClick={this.handleSubmit} className = "uk-button uk-button-primary uk-margin-small-bottom uk-button-small uk-text-center" >Рассчитать</button>   
+             */}
+             
+              <Button  variant="outlined" className={this.state.button=== true ? "disabled":"but-reset"} onClick={this.ResetTextInput}  disabled={this.state.button}>Сбросить</Button>
+              <Button variant="contained" className="uk-text-normal but-result" onClick={this.handleSubmit} >Рассчитать</Button>
             </div>  
 
           </form>
@@ -657,7 +662,7 @@ render(){
           </div>
        
       </div>
-      {/* {this.state.loader === true ? this.Loader() : null} */}
+      {/* {this.state.loader === true ? <Spinner/>: null} */}
     </div>
   );
 }

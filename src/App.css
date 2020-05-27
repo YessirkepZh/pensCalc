@@ -135,3 +135,29 @@
 .hidden{
   display: none;
 }
+.but-result{
+  background-color: #2A6BCB!important;
+  color: white!important;
+  
+}
+.but-reset{
+  border:1px solid #2A6BCB!important;
+  color: #2A6BCB!important;
+}
+.disabled{
+ border:1px solid rgba(42, 107, 203, 0.6)!important;
+ color:rgba(42, 107, 203, 0.6)!important;
+}
+.disabledRes{
+  background-color: rgba(42, 107, 203, 0.6)!important;
+  color: white!important;
+}
+
+.uk-accordion-title::before{
+  background-image: url('./images/down2.svg')!important;
+}
+.uk-open > .uk-accordion-title::before{
+  
+  background-image: url('./images/up.svg')!important;
+  
+}

@@ -2,6 +2,7 @@ import React from 'react';
 import InfoBlock from './InfoBlock';
 import * as Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
+import { Button } from '@material-ui/core';
 function renderTableData(data:any) {
     return data.map((dat:any) => {
        const { Year, Age, BasicPension, SolidarityPension,OPV,OPPV,DPV,Total,KoefZam,PensAnnuity } = dat //destructuring
@@ -213,15 +214,20 @@ export default ({ data ,onClick,disabled}:any) =>
   </div>
   <hr className="deviderRes"/>
 
-  <div className="uk-flex uk-flex-around uk-margin-small-top">
+  <div className="uk-flex uk-flex-around uk-margin-small-top uk-margin-small-bottom">
       
-    <button type="button" uk-toggle="target: #modal-graph" className="uk-button uk-button-primary uk-button-small uk-margin-small-bottom uk-margin-small-top" disabled={disabled}>график</button>
+    {/* <button type="button" uk-toggle="target: #modal-graph" className="uk-button uk-button-primary  uk-margin-small-bottom uk-margin-small-top" disabled={disabled}>график</button>
 
-    <button type="button" uk-toggle="target: #modal-table" className="uk-button uk-button-primary uk-button-small uk-margin-small-bottom uk-margin-small-top disabled" disabled={disabled}>таблица</button>
+    <button type="button" uk-toggle="target: #modal-table" className="uk-button uk-button-primary  uk-margin-small-bottom uk-margin-small-top disabled" disabled={disabled}>таблица</button> */}
+    
+    <Button variant="contained" className={disabled=== true ? "disabledRes uk-width-1-2 uk-margin-small-left uk-margin-small-right":"but-result uk-width-1-2 uk-margin-small-left uk-margin-small-right"} uk-toggle="target: #modal-graph" disableElevation disabled={disabled}>график</Button>
+    
+    <Button variant="contained" className={disabled=== true ? "disabledRes uk-width-1-2 uk-margin-small-left uk-margin-small-right":"but-result uk-width-1-2 uk-margin-small-left uk-margin-small-right"} uk-toggle="target: #modal-table" disableElevation disabled={disabled}>таблица</Button>
 
   </div>  
-  <div className="uk-flex uk-flex-center">
-    <button type="button" onClick={onClick} className="uk-button uk-button-primary uk-button-small uk-margin-small-bottom uk-margin-small-top" disabled={disabled}>отправить на e-mail</button>
+  <div className="uk-flex uk-flex-center ">
+    {/* <button type="button" onClick={onClick} className="uk-button uk-button-primary uk-button-small uk-margin-small-bottom uk-margin-small-top uk-width-1-2" disabled={disabled}>отправить на e-mail</button> */}
+    <Button variant="contained" className={disabled=== true ? "disabledRes uk-width-2-2 uk-margin-small-left uk-margin-small-right":"but-result uk-width-2-2 uk-margin-small-left uk-margin-small-right"} onClick={onClick} disableElevation disabled={disabled}>отправить на e-mail</Button>
 
   </div>
 
@@ -233,7 +239,7 @@ export default ({ data ,onClick,disabled}:any) =>
     </div>
   </div>
 
-  <div id="modal-table" className="uk-flex-top uk-margin-auto-vertical" uk-modal="true">
+  <div id="modal-table" className="uk-flex-top" uk-modal="true">
     <div className="uk-modal-dialog uk-modal-body uk-margin-remove uk-overflow-auto">
 
         <button className="uk-modal-close-default" type="button" uk-close="true"></button>

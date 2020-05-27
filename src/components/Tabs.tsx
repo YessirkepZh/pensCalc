@@ -93,7 +93,7 @@ function TabPanel(props: TabPanelProps) {
       >
         {value === index && (
           <Box p={0}>
-            <Typography>{children}</Typography>
+            {children}
           </Box>
         )}
       </div>
@@ -153,7 +153,7 @@ function CustomizedTabs(data:any, onClick:any, disabled:any) {
       </div>
      
     </div>
-  );
+  )
 }
 export default ({ data ,onClick,disabled}:any) => 
 
