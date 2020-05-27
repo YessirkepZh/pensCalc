@@ -166,7 +166,7 @@ export default ({ data ,onClick,disabled}:any) =>
   <hr className="deviderRes"/>
 
   <div className="uk-flex uk-flex-bottom uk-text-left uk-margin-small-left uk-margin-small-right">
-      <div className="uk-width-expand" uk-leader="true" ><span className="uk-text-secondary uk-text-normal uk-text-small">пенсия из ЕНПФ, тг/мес <InfoBlock text="Добровольные пенсионные взносы"/></span></div>
+      <div className="uk-width-expand" uk-leader="true" ><span className="uk-text-secondary uk-text-normal uk-text-small">пенсия из ЕНПФ, тг/мес <InfoBlock text="Добровольные пенсионные взносы"/> </span></div>
       <div className="uk-text-emphasis uk-text-bold uk-text-small">{data.SolidarityPension === '' ? '***' : (parseFloat(data.EnpfPensionOPV)+parseFloat(data.EnpfPensionOPPV)+parseFloat(data.EnpfPensionDPV)).toLocaleString()} <span className="tenge" >&#8376;</span></div>
   </div>
 
@@ -233,12 +233,12 @@ export default ({ data ,onClick,disabled}:any) =>
     </div>
   </div>
 
-  <div id="modal-table" className="uk-flex-top uk-modal-full" uk-modal="true">
-    <div className="uk-modal-dialog uk-modal-body uk-margin-remove">
+  <div id="modal-table" className="uk-flex-top uk-margin-auto-vertical" uk-modal="true">
+    <div className="uk-modal-dialog uk-modal-body uk-margin-remove uk-overflow-auto">
 
         <button className="uk-modal-close-default" type="button" uk-close="true"></button>
 
-        <table id="table">
+        <table id="table" className="uk-table">
                <tbody>
                  <tr>{renderTableHeader()}</tr>
                   {renderTableData(data.EnpfCalcTable)}

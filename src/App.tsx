@@ -66,7 +66,8 @@ let result = {} as Response;
 export default class  App extends React.Component<AppProps,AppState> {
   myRef:any
   textInput: any;
-  AverageSal:any
+  AverageSal:any;
+  scrollTarget:any;
  
   textText:string='';
   constructor(props:any) {
@@ -88,6 +89,7 @@ export default class  App extends React.Component<AppProps,AppState> {
     this.myRef = React.createRef(); 
     this.textInput = React.createRef();
     this.AverageSal = React.createRef();
+    this.scrollTarget = React.createRef();
 
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -104,7 +106,7 @@ export default class  App extends React.Component<AppProps,AppState> {
       let input = this.state.input;
       switch (id) {
         case 'exp1998year':
-          input.Exp1998=event.target.value+this.state.input.Exp1998.substring(this.state.input.Exp1998.indexOf("."));
+          input.Exp1998=(parseInt(event.target.value) < 0 ? '0' : parseInt(event.target.value) >100 ? '100' :event.target.value)  +this.state.input.Exp1998.substring(this.state.input.Exp1998.indexOf("."));
           this.callbackFunctionInput(input);
           break;
         
@@ -300,7 +302,7 @@ export default class  App extends React.Component<AppProps,AppState> {
               this.callbackFunction(result);
               this.setState({button:false});
               console.log(result)
-              
+              window.scrollTo(0, this.scrollTarget.current.offsetTop) 
             
               if(result.PensionAnnuityAsk==="1"||result.PensionAnnuityAsk==="3"||result.PensionAnnuityAsk==="4"){
                 let scen1='в рамках пессимистичного, реалистичного и оптимистичного сценариев';
@@ -322,7 +324,7 @@ export default class  App extends React.Component<AppProps,AppState> {
                     let val=this.state.input;
                     val.CalcType='2';
                     this.setState({loader:true});
-                    axios.post(`https://mobile.enpf.kz/JasperReports/api/EnpfCalculator2`, JSON.stringify(val))
+                    axios.post(`https://mobile.enpf.kz/JasperReports/api/EnpfCalculator2`,this.revmoveSpaceBetweenDigits(val))
                     .then(res => {
                       this.setState({loader:false});
                       if(res.data.code === "0"){
@@ -330,6 +332,8 @@ export default class  App extends React.Component<AppProps,AppState> {
                         let result =  JSON.parse(base64.decode(res.data.message));
                         this.callbackFunction(result);
                         this.setState({button:false});
+                        window.scrollTo(0, this.scrollTarget.current.offsetTop) 
+
                       }
                       if(res.data.code === "-1"){
                         Swal.fire('Ошибка', res.data.message, 'error')
@@ -398,7 +402,7 @@ export default class  App extends React.Component<AppProps,AppState> {
         let data =this.state.input;
         data.email=login;
 
-        return axios.post(`https://mobile.enpf.kz/JasperReports/api/sendPDFtoEmail`, JSON.stringify(data))
+        return axios.post(`https://mobile.enpf.kz/JasperReports/api/sendPDFtoEmail`, this.revmoveSpaceBetweenDigits(data))
         .then((result:any) => {
          
           if(result.data.code==="0"){
@@ -594,7 +598,7 @@ render(){
 
         </div>     
           <form  className="uk-margin-small-top" ref={this.textInput}>
-            <h4 className="uk-heading-line uk-text-center uk-margin-remove-bottom "><span>Прогноз вашей пенсии</span></h4>
+            <h4 className="uk-heading-line uk-text-center uk-margin-remove-bottom " ref={this.scrollTarget}><span>Прогноз вашей пенсии</span></h4>
             <Tabs 
               data={this.state.output}
               onClick={this.sendEmail}
