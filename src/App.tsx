@@ -13,7 +13,7 @@ import Swal from 'sweetalert2';
 import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
 import './App.css';
 import Tabs from './components/Tabs'
-import { Button } from '@material-ui/core';
+import { Button, FormControlLabel, RadioGroup, Radio } from '@material-ui/core';
 import Spinner from './components/Spinner';
 import { useTranslation } from 'react-i18next';
 import { withTranslation } from 'react-i18next';
@@ -108,7 +108,7 @@ export default class  App extends React.Component<AppProps,AppState> {
     this.handleSubmit = this.handleSubmit.bind(this);
     this.sendEmail = this.sendEmail.bind(this);
     this.ResetTextInput = this.ResetTextInput.bind(this);
-    console.log(this.props)
+
   }
 
   handleChange(event:any) {
@@ -483,18 +483,49 @@ render(){
       <Route exact path='/main/:lang' component={App}/>
      
      <div className="uk-margin-small-top ">
-
-       
+          <div >
+            <Spinner />
+          </div>
           <form className="uk-text-left" ref={this.textInput}>
 
             <h4 className="uk-heading-line uk-text-center"><span> {this.state.lang==='ru' ? ru.input.title : kz.input.title}</span></h4>
               <div className="backGrey">
                 <span className="uk-text-secondary uk-text-small uk-text-normal uk-margin-small-left ">{this.state.lang==='ru' ? ru.input.sex : kz.input.sex}</span>
-                <div uk-switcher="animation: uk-animation-fade; toggle: > *" className="uk-margin-remove-top uk-margin-small-bottom uk-margin-small-left">
+
+                {/* <div uk-switcher="animation: uk-animation-fade; toggle: > *" className="uk-margin-remove-top uk-margin-small-bottom uk-margin-small-left">
                
                     <button id="male" className="uk-button uk-button-default uk-button-small uk-text-lowercase" type="button" onClick={this.handleChange} >{this.state.lang==='ru' ? ru.input.male : kz.input.male}</button>
                     <button id="female" className="uk-button uk-button-default uk-button-small uk-text-lowercase" type="button" onClick={this.handleChange}>{this.state.lang==='ru' ? ru.input.female : kz.input.female}</button>
-                </div>
+                </div> */}
+                
+                <RadioGroup
+                  row 
+                  aria-label="position" 
+                  name="position" 
+                  defaultValue="top" 
+                  >
+                  <FormControlLabel
+                    value="M"
+                    control={<Radio/>}
+                    label="Мужской"
+                    onClick={this.handleChange}
+                    labelPlacement="start"
+                    id="male"
+                    className="uk-margin-small-left uk-input uk-input-small uk-text-small uk-text-secondary uk-text-left uk-width-1-3 uk-margin-small-bottom uk-margin-remove-top"
+                    /> 
+
+                  <FormControlLabel
+                    value="F"
+                    control={<Radio
+                    />}
+                    label="Женский"
+                    onClick={this.handleChange}
+                    id="female"
+                    labelPlacement="start"
+                    className="uk-margin-small-left uk-input uk-input-small uk-text-small uk-text-secondary uk-text-left uk-width-1-3"
+                    />
+                </RadioGroup>
+
               </div>
 
               <div className="uk-margin-small-bottom">

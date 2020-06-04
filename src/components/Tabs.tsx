@@ -137,6 +137,7 @@ function CustomizedTabs(data:any, onClick:any, disabled:any,lang:string) {
         <TabPanel value={value} index={1} dir={theme.direction} >
             <Results 
                 data={data.EnpfCalculatorRealist}
+                lang = {lang}
                 onClick={onClick}
                 disabled={disabled}
                 />
@@ -144,6 +145,7 @@ function CustomizedTabs(data:any, onClick:any, disabled:any,lang:string) {
         <TabPanel value={value} index={2} dir={theme.direction}>
             <Results 
                 data={data.EnpfCalculatorOptimist}
+                lang = {lang}
                 onClick={onClick}
                 disabled={disabled}
                 />

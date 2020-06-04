@@ -1,18 +1,92 @@
 import React from 'react';
-import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
-import Loader from 'react-loader-spinner'
+import { makeStyles, createStyles, withStyles, Theme } from '@material-ui/core/styles';
+import CircularProgress, { CircularProgressProps } from '@material-ui/core/CircularProgress';
+import LinearProgress from '@material-ui/core/LinearProgress';
 
-export default () => 
-<div className="uk-overlay uk-position-center">
-              
-                    <Loader
-            type="Rings"
-            color="#2A6BCB"
-            height={100}
-            width={100}
-            timeout={5000}
-             //3 secs
-           
-        />
+const BorderLinearProgress = withStyles((theme: Theme) =>
+  createStyles({
+    root: {
+      height: 10,
+      borderRadius: 5,
+    },
+    colorPrimary: {
+      backgroundColor: theme.palette.grey[theme.palette.type === 'light' ? 200 : 700],
+    },
+    bar: {
+      borderRadius: 5,
+      backgroundColor: '#1a90ff',
+    },
+  }),
+)(LinearProgress);
+
+// Inspired by the former Facebook spinners.
+const useStylesFacebook = makeStyles((theme: Theme) =>
+  createStyles({
+    root: {
+      position: 'absolute',
+  
+
+    },
+    bottom: {
+      color: theme.palette.grey[theme.palette.type === 'light' ? 200 : 700],
+      position: 'absolute',
+    },
+    top: {
+      color: '#2A6BCB',
+      animationDuration: '600ms',
+      position: 'absolute',
+      left:'50%',
+      top:'50%'
+
+
+    },
+    circle: {
+      strokeLinecap: 'round',
+    },
+  }),
+);
+
+function FacebookCircularProgress(props: CircularProgressProps) {
+  const classes = useStylesFacebook();
+
+  return (
+    <div className={classes.root}>
+      <CircularProgress
+        variant="determinate"
+        className={classes.bottom}
+        size={40}
+        thickness={4}
+        {...props}
+        value={100}
+      />
+      <CircularProgress
+        variant="indeterminate"
+        disableShrink
+        className={classes.top}
+        classes={{
+          circle: classes.circle,
+        }}
+        size={40}
+        thickness={4}
+        {...props}
         
-</div>;
+      />
+    </div>
+  );
+}
+
+const useStyles = makeStyles({
+  root: {
+    flexGrow: 1,
+  },
+});
+
+export default function CustomizedProgressBars() {
+  const classes = useStyles();
+
+  return (
+    <div className={classes.root}>
+      <FacebookCircularProgress />
+    </div>
+  );
+}

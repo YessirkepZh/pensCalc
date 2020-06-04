@@ -42,12 +42,12 @@
   margin-top:-7px!important;
 }
 .uk-active {
-  border-color:#1e87f0!important;
+  border-color:#2A6BCB!important;
 }
 
 .uk-tab > .uk-active > a {
     color: #333;
-    border-color: #1e87f0;
+    border-color: #2A6BCB;
 }
 .titleRes{
   font-size:13px;
@@ -145,11 +145,11 @@
   color: #2A6BCB!important;
 }
 .disabled{
- border:1px solid rgba(42, 107, 203, 0.6)!important;
- color:rgba(42, 107, 203, 0.6)!important;
+ border:1px solid #b1c4e2!important;
+ color:#b1c4e2!important;
 }
 .disabledRes{
-  background-color: rgba(42, 107, 203, 0.6)!important;
+  background-color: #b1c4e2!important;
   color: white!important;
 }
 
@@ -160,4 +160,19 @@
   
   background-image: url('./images/up.svg')!important;
   
+}
+
+
+.Mui-checked {
+  color: #2A6BCB!important;
+
+}
+.MuiFormControlLabel-label{
+
+}
+
+.id {
+  left: 50%;
+
+  top:50%;
 }
