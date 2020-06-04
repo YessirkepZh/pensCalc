@@ -15,9 +15,18 @@ import './App.css';
 import Tabs from './components/Tabs'
 import { Button } from '@material-ui/core';
 import Spinner from './components/Spinner';
+import { useTranslation } from 'react-i18next';
+import { withTranslation } from 'react-i18next';
+import ru from './locale/ru.json'
+import kz from './locale/kz.json'
+
+
+import queryString from 'query-string';
+import { Route } from 'react-router-dom';
+
+ 
 
 interface AppProps { 
-
 }
 export interface AppState {
   input:{
@@ -58,17 +67,21 @@ export interface AppState {
   dpv:boolean,
   typeSal:boolean,
   typeDpv:boolean,
-  enlarge:boolean
+  enlarge:boolean,
+  lang:string,
 
 };
 let result = {} as Response;
+
 export default class  App extends React.Component<AppProps,AppState> {
   myRef:any
   textInput: any;
   AverageSal:any;
   scrollTarget:any;
- 
+
+
   textText:string='';
+
   constructor(props:any) {
     super(props);
     this.state = {
@@ -81,7 +94,8 @@ export default class  App extends React.Component<AppProps,AppState> {
       dpv:false,
       typeSal:true,
       typeDpv:true,
-      enlarge:false
+      enlarge:false,
+      lang:'ru'
       
     };
 
@@ -94,6 +108,7 @@ export default class  App extends React.Component<AppProps,AppState> {
     this.handleSubmit = this.handleSubmit.bind(this);
     this.sendEmail = this.sendEmail.bind(this);
     this.ResetTextInput = this.ResetTextInput.bind(this);
+    console.log(this.props)
   }
 
   handleChange(event:any) {
@@ -304,11 +319,11 @@ export default class  App extends React.Component<AppProps,AppState> {
               window.scrollTo(0, this.scrollTarget.current.offsetTop) 
             
               if(result.PensionAnnuityAsk==="1"||result.PensionAnnuityAsk==="3"||result.PensionAnnuityAsk==="4"){
-                let scen1='в рамках пессимистичного, реалистичного и оптимистичного сценариев';
-                let scen3='в рамках реалистичного и оптимистичного сценариев';
-                let scen4='в рамках оптимистичного сценария';
+                let scen1=this.state.lang==="ru" ? ru.alert.res_all : kz.alert.res_all ;
+                let scen3=this.state.lang==="ru" ? ru.alert.res_real : kz.alert.res_real ;
+                let scen4=this.state.lang==="ru" ? ru.alert.res_opt : kz.alert.res_opt ;
 
-                let text = 'Уведомляем Вас о том, что прогнозная сумма Ваших пенсионных накоплений к достижению пенсионного возраста является достаточной для приобретения пожизненного пенсионного аннуитета (прим.: Пожизненный пенсионный аннуитет – это договор, который позволяет Вам получать пожизненные ежемесячные пенсионные выплаты).'+(result.PensionAnnuityAsk==='1'? scen1 :result.PensionAnnuityAsk==="3" ? scen3 : scen4 )+' Желаете рассчитать пожизненный пенсионный аннуитет?';
+                let text = this.state.lang==='ru' ? ru.alert.res_annunity : kz.alert.res_annunity + (result.PensionAnnuityAsk==='1'? scen1 :result.PensionAnnuityAsk==="3" ? scen3 : scen4 )+this.state.lang==='ru' ? ru.alert.res_ask : kz.alert.res_ask;
                 Swal.fire({
                   text: text,
                   icon: 'warning',
@@ -362,7 +377,7 @@ export default class  App extends React.Component<AppProps,AppState> {
       else {
         Swal.fire({
           title:'Упс', 
-          text:'Необходимо заполнить обязательные поля',
+          text:this.state.lang==='ru' ? ru.alert.enter_field : kz.alert.enter_field,
           icon: 'warning',
           confirmButtonColor: '#2A6BCB'});
       }
@@ -387,7 +402,7 @@ export default class  App extends React.Component<AppProps,AppState> {
    
 
     Swal.fire({
-      text: 'Введите Ваш e-mail чтобы получить результаты прогноза пенсии и нажмите «Отправить»',
+      text: this.state.lang==='ru' ? ru.alert.enter_email : kz.alert.enter_email,
       input: 'email',
       inputAttributes: {
         autocapitalize: 'off'
@@ -410,7 +425,7 @@ export default class  App extends React.Component<AppProps,AppState> {
             Swal.fire('', result.data.message, 'success')
           }
           else{
-            Swal.fire('', 'Не правильный E-mail', 'error')
+            Swal.fire('',this.state.lang==='ru' ? ru.alert.incorrect_email : kz.alert.incorrect_email , 'error')
           }
           
         }).catch((e)=>{
@@ -456,48 +471,52 @@ export default class  App extends React.Component<AppProps,AppState> {
 )
 
 
-
+ 
 render(){
+
 
   return (
     
+
     <div className="App">
-  
+
+      <Route exact path='/main/:lang' component={App}/>
+     
      <div className="uk-margin-small-top ">
 
-        
+       
           <form className="uk-text-left" ref={this.textInput}>
 
-            <h4 className="uk-heading-line uk-text-center"><span>Входные данные</span></h4>
+            <h4 className="uk-heading-line uk-text-center"><span> {this.state.lang==='ru' ? ru.input.title : kz.input.title}</span></h4>
               <div className="backGrey">
-                <span className="uk-text-secondary uk-text-small uk-text-normal uk-margin-small-left ">Пол:</span>
+                <span className="uk-text-secondary uk-text-small uk-text-normal uk-margin-small-left ">{this.state.lang==='ru' ? ru.input.sex : kz.input.sex}</span>
                 <div uk-switcher="animation: uk-animation-fade; toggle: > *" className="uk-margin-remove-top uk-margin-small-bottom uk-margin-small-left">
                
-                    <button id="male" className="uk-button uk-button-default uk-button-small uk-text-lowercase" type="button" onClick={this.handleChange} >Мужской</button>
-                    <button id="female" className="uk-button uk-button-default uk-button-small uk-text-lowercase" type="button" onClick={this.handleChange}>Женский</button>
+                    <button id="male" className="uk-button uk-button-default uk-button-small uk-text-lowercase" type="button" onClick={this.handleChange} >{this.state.lang==='ru' ? ru.input.male : kz.input.male}</button>
+                    <button id="female" className="uk-button uk-button-default uk-button-small uk-text-lowercase" type="button" onClick={this.handleChange}>{this.state.lang==='ru' ? ru.input.female : kz.input.female}</button>
                 </div>
               </div>
 
               <div className="uk-margin-small-bottom">
-                <div className="uk-text-secondary uk-text-small uk-text-normal uk-margin-small-left">Дата рождения:</div>
+                <div className="uk-text-secondary uk-text-small uk-text-normal uk-margin-small-left">{this.state.lang==='ru' ? ru.input.birthday : kz.input.birthday}</div>
                 <input id="BirthDate" className="uk-input  uk-width-1-2 uk-form-small uk-margin-small-left" type="date" onChange={this.handleChange} />
               </div>
               <div className="backGrey">
-                <InputExp id1="exp1998year" id2="exp1998month" handleChange={this.handleChange} title="Трудовой стаж до 1998 года:"/>
+                <InputExp id1="exp1998year" id2="exp1998month" handleChange={this.handleChange} title={this.state.lang==='ru' ? ru.input.exp_to : kz.input.exp_to}/>
               </div>
               
               <div className="">
-                <InputExp id1="expYear" id2="expYearM" handleChange={this.handleChange} title="Трудовой стаж с 1998 года:"/>
+                <InputExp id1="expYear" id2="expYearM" handleChange={this.handleChange} title={this.state.lang==='ru' ? ru.input.exp_after : kz.input.exp_after}/>
               </div>
 
               <div className="backGrey">
-                <InputSalary id="AverageSal"  value={this.state.input.AverageSal} handleChange={this.handleChange} title="Средняя заработная плата в месяц:"/>
+                <InputSalary id="AverageSal"  value={this.state.input.AverageSal} handleChange={this.handleChange} title={this.state.lang==='ru' ? ru.input.average : kz.input.average}/>
               <div>{this.textText}</div>
               </div>
 
               <div className="uk-margin-small-bottom">
 
-                <span className="uk-text-secondary uk-text-small uk-text-normal uk-margin-small-left">Периодичность взносов: <InfoBlock text="Добровольные пенсионные взносы"/></span>
+                <span className="uk-text-secondary uk-text-small uk-text-normal uk-margin-small-left">{this.state.lang==='ru' ? ru.input.period_pay : kz.input.period_pay}<InfoBlock text={this.state.lang==='ru' ? ru.input.title : kz.input.title}/></span>
                 <div className="uk-margin-small-left">
                   <SelectPeriod change={this.handleChange} id="PeriodPayOPV" classN={"uk-select uk-form-small uk-text-right uk-width-1-5 "}/> 
                 </div>
@@ -507,7 +526,7 @@ render(){
               <ul uk-accordion="multiple: true;animation:true" className="uk-margin-remove uk-text-left " >
                 <li className="uk-margin-small-bottom"> 
                     <a className="uk-accordion-title backGrey" href="#" onClick={()=>this.setState({enlarge:!this.state.enlarge})}>
-                      <span className="uk-text-secondary uk-text-small uk-text-normal uk-margin-small-left">С учетом ежегодного роста заработной платы:</span> 
+                      <span className="uk-text-secondary uk-text-small uk-text-normal uk-margin-small-left">{this.state.lang==='ru' ? ru.input.enlarge_sal : kz.input.enlarge_sal}</span> 
                     </a>
                     <div className="uk-accordion-content uk-text-small uk-flex uk-flex-left uk-margin-small-top uk-margin-small-left uk-margin-small-bottom">
                         {this.state.typeSal=== true ? this.InputTenge() : this.InputPercent()}
@@ -523,7 +542,7 @@ render(){
               <ul uk-accordion="multiple: true;animation:true" className="uk-margin-remove-top uk-text-left " >
                 <li  className="uk-open uk-margin-small-bottom" >
                     <a className="uk-accordion-title backGrey" href="#" onClick={()=>this.setState({opv:!this.state.opv})}>
-                      <span className="uk-text-secondary uk-text-small uk-text-normal uk-margin-small-left">Обязательные пенсионные взносы (ОПВ):</span> 
+                      <span className="uk-text-secondary uk-text-small uk-text-normal uk-margin-small-left">{this.state.lang==='ru' ? ru.input.opv : kz.input.opv}</span> 
                     </a>
                     <div className="uk-accordion-content uk-margin-remove-top">
                       <InputSum id="SumOPV" value={this.state.input.SumOPV} handleChange={this.handleChange}/>
@@ -532,7 +551,7 @@ render(){
                     <ul uk-accordion="multiple: true;animation:true" className="uk-margin-small-top uk-text-left " >
                       <li className="uk-margin-remove-top">
                           <a  className="uk-accordion-title backGrey" href="#" onClick={()=>this.setState({oppv:!this.state.oppv})}>
-                            <span className="uk-text-secondary uk-text-small uk-text-normal uk-margin-small-left">Обязательные профессиональные пенсионные взносы (ОППВ)</span> 
+                            <span className="uk-text-secondary uk-text-small uk-text-normal uk-margin-small-left">{this.state.lang==='ru' ? ru.input.oppv : kz.input.oppv}</span> 
                           </a>
                           <div className="uk-accordion-content uk-margin-remove-top ">
                               <InputSum id="SumOPPV" value={this.state.input.SumOPPV} handleChange={this.handleChange}/>
@@ -546,24 +565,24 @@ render(){
 
                 <li className="uk-margin-remove-top  ">
                     <a className="uk-accordion-title backGrey" href="#" onClick={()=>this.setState({dpv:!this.state.dpv})}>
-                      <span className="uk-text-secondary uk-text-small uk-text-normal uk-margin-small-left">Добровольные пенсионные взносы (ДПВ)</span>
+                      <span className="uk-text-secondary uk-text-small uk-text-normal uk-margin-small-left">{this.state.lang==='ru' ? ru.input.dpv : kz.input.dpv}</span>
                     </a>
                     <div className="uk-accordion-content uk-margin-remove-top">
                         <InputSum id="SumDPV" value={this.state.input.SumDPV} handleChange={this.handleChange}/>
 
                         <div className="uk-flex uk-flex-column uk-margin-small-left">
-                            <span className="uk-text-secondary uk-text-normal uk-text-small">возраст получения:</span>
+                            <span className="uk-text-secondary uk-text-normal uk-text-small">{this.state.lang==='ru' ? ru.input.pay_age : kz.input.pay_age}</span>
                             <input type="text" id="PayoutAge" onChange={this.handleChange}  ref={this.myRef} className="uk-text-right uk-width-1-2 uk-width-1-5 uk-input uk-form-small"/>
                           </div>
 
                           <div className="uk-flex uk-flex-column uk-margin-small-left">
-                            <span className="uk-text-secondary uk-text-normal uk-text-small">периодичность взносов:</span>
+                            <span className="uk-text-secondary uk-text-normal uk-text-small">{this.state.lang==='ru' ? ru.input.title : kz.input.title}</span>
                              <SelectPeriod  change={this.handleChange} id="PeriodPayDPV" classN="uk-select uk-form-small uk-margin-small-bottom uk-text-right uk-width-1-5"/>
                           </div>
                        
 
                         <div className="uk-flex uk-flex-left uk-flex-column uk-text-small uk-margin-small-left">
-                          <span className="uk-text-secondary uk-text-normal">сумма добровольных взносов:</span>
+                          <span className="uk-text-secondary uk-text-normal">{this.state.lang==='ru' ? ru.input.sum_dpv : kz.input.sum_dpv}</span>
                             <div className="uk-text-small uk-flex uk-flex-left uk-margin-remove">
                             {this.state.typeDpv===true? 
                               <input id="SumDPVtenge" type="text" value={this.state.input.SumDPVtenge} placeholder="*** *** ***" onChange={this.handleChange}  className="uk-input uk-form-small uk-text-right uk-width-1-2"/>
@@ -577,7 +596,7 @@ render(){
                         </div>
 
                         <div className="uk-flex uk-flex-left uk-flex-column uk-text-small uk-margin-small-top uk-margin-small-left">
-                          <span className="uk-text-secondary uk-text-normal">желаемая ежемесячная выплата в тенге:
+                          <span className="uk-text-secondary uk-text-normal">{this.state.lang==='ru' ? ru.input.moth_sal : kz.input.month}
                             <InfoBlock text="Добровольные пенсионные взносыДобровольные пенсионные взносыДобровольные пенсионные взносы"/>
                           </span>
                           <input id="PayoutMonth" type="text" placeholder="*** *** ***" value={this.state.input.PayoutMonth} className="uk-text-right uk-width-1-2 uk-width-1-2 uk-input uk-form-small" onChange={this.handleChange}/>
@@ -593,8 +612,8 @@ render(){
               <button  onClick={this.handleSubmit} className = "uk-button uk-button-primary uk-margin-small-bottom uk-button-small uk-text-center" >Рассчитать</button>   
              */}
              
-              <Button  variant="outlined" className={this.state.button=== true ? "disabled":"but-reset"} onClick={this.ResetTextInput}  disabled={this.state.button}>Сбросить</Button>
-              <Button variant="contained" className="uk-text-normal but-result" onClick={this.handleSubmit} >Рассчитать</Button>
+              <Button  variant="outlined" className={this.state.button=== true ? "disabled":"but-reset"} onClick={this.ResetTextInput}  disabled={this.state.button}>{this.state.lang==='ru' ? ru.input.refrsh : kz.input.refrsh}</Button>
+              <Button variant="contained" className="uk-text-normal but-result" onClick={this.handleSubmit} >{this.state.lang==='ru' ? ru.input.result : kz.input.result}</Button>
             </div>  
 
           </form>
@@ -608,6 +627,7 @@ render(){
               data={this.state.output}
               onClick={this.sendEmail}
               disabled={this.state.button}
+              lang={this.state.lang}
             />    
 {/* 
             <div className="uk-margin-small-top ">
@@ -664,6 +684,8 @@ render(){
       </div>
       {/* {this.state.loader === true ? <Spinner/>: null} */}
     </div>
+    
   );
 }
 }
+

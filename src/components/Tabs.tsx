@@ -100,7 +100,7 @@ function TabPanel(props: TabPanelProps) {
     );
   }
 
-function CustomizedTabs(data:any, onClick:any, disabled:any) {
+function CustomizedTabs(data:any, onClick:any, disabled:any,lang:string) {
   const classes = useStyles();
   const [value, setValue] = React.useState(0);
   const theme = useTheme();
@@ -128,6 +128,7 @@ function CustomizedTabs(data:any, onClick:any, disabled:any) {
         <TabPanel value={value} index={0} dir={theme.direction} >
         <Results 
             data={data.EnpfCalculatorPessimist}
+            lang = {lang}
             onClick={onClick}
             disabled={disabled}
             
@@ -155,10 +156,10 @@ function CustomizedTabs(data:any, onClick:any, disabled:any) {
     </div>
   )
 }
-export default ({ data ,onClick,disabled}:any) => 
+export default ({ data ,onClick,disabled,lang}:any) => 
 
     <div className="uk-margin-remove">
-        {CustomizedTabs(data ,onClick,disabled)}
+        {CustomizedTabs(data ,onClick,disabled,lang)}
     </div>           
   
 ;
