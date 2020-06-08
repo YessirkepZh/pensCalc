@@ -23,34 +23,44 @@ const BorderLinearProgress = withStyles((theme: Theme) =>
 const useStylesFacebook = makeStyles((theme: Theme) =>
   createStyles({
     root: {
-      position: 'absolute',
-  
+      position: 'fixed',
+      zIndex:9999,
+      left:'45%',
+      top:'50%',
+      boxShadow:'0px 0px 0px 2000px rgba(0, 0, 0, 0.6)'
 
-    },
+     
+     
+    
+    },  
     bottom: {
       color: theme.palette.grey[theme.palette.type === 'light' ? 200 : 700],
       position: 'absolute',
+      backgroundColor:"white",
+      padding:'8px 9px'
     },
     top: {
       color: '#2A6BCB',
       animationDuration: '600ms',
       position: 'absolute',
-      left:'50%',
-      top:'50%'
-
-
+      padding:'8px 8px'
     },
     circle: {
       strokeLinecap: 'round',
+      
     },
   }),
 );
+function onClick(event:any){
+  event.preventDefault();
+}
+
 
 function FacebookCircularProgress(props: CircularProgressProps) {
   const classes = useStylesFacebook();
-
+  
   return (
-    <div className={classes.root}>
+    <div className={classes.root} onClick={onClick}>
       <CircularProgress
         variant="determinate"
         className={classes.bottom}

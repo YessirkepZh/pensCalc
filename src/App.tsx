@@ -236,6 +236,7 @@ export default class  App extends React.Component<AppProps,AppState> {
   //сброс всех полей (выходных / входных)
   ResetTextInput() {
     try{
+      console.log('reset')
       this.textInput.current.reset();
     }
     catch(ex){console.error(ex)}
@@ -483,9 +484,9 @@ render(){
       <Route exact path='/main/:lang' component={App}/>
      
      <div className="uk-margin-small-top ">
-          <div >
-            <Spinner />
-          </div>
+
+        {this.state.loader === true ?<Spinner/>: null} 
+          
           <form className="uk-text-left" ref={this.textInput}>
 
             <h4 className="uk-heading-line uk-text-center"><span> {this.state.lang==='ru' ? ru.input.title : kz.input.title}</span></h4>
@@ -713,7 +714,7 @@ render(){
           </div>
        
       </div>
-      {/* {this.state.loader === true ? <Spinner/>: null} */}
+     
     </div>
     
   );
