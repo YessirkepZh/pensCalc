@@ -149,7 +149,7 @@ export default ({ data ,onClick,disabled,lang}:any) =>
 <div className="uk-text-small">
 
   <div className="uk-flex uk-flex-bottom uk-text-left uk-margin-small-left uk-margin-small-right">
-    <div className="uk-width-expand" uk-leader="true" ><span className="uk-text-secondary uk-text-normal  uk-text-small">{lang==='ru' ? ru.output.payout_age_opv : kz.output.payout_age_opv}) <InfoBlock text="Добровольные пенсионные взносы"/></span></div>
+    <div className="uk-width-expand" uk-leader="true" ><span className="uk-text-secondary uk-text-normal  uk-text-small">{lang==='ru' ? ru.output.payout_age_opv : kz.output.payout_age_opv}  </span></div>
     <div className="uk-text-small"><span className="uk-text-bold uk-text-emphasis ">{data.Retirement.Age ==='' ? '**':data.Retirement.Age}</span> {lang==='ru' ? ru.input.year : kz.input.year} <span className="uk-text-bold uk-text-emphasis ">{data.Retirement.Dt ==='' ? '**':data.Retirement.Dt}</span></div>
   </div>
   <hr className="uk-margin-remove"/>
@@ -167,35 +167,35 @@ export default ({ data ,onClick,disabled,lang}:any) =>
   <div className="uk-text-left uk-text-secondary uk-margin-small-left uk-margin-small-right uk-text-small">{lang==='ru' ? ru.output.payout_years : kz.output.payout_years}</div>
   
   <div className="uk-flex uk-flex-bottom  uk-text-left uk-margin-medium-left uk-margin-medium-left uk-margin-small-right" >
-      <div className="uk-width-expand" uk-leader="true" ><span className="uk-text-secondary uk-text-normal uk-text-small">{lang==='ru' ? ru.output.opv : kz.output.opv} <InfoBlock text="Добровольные пенсионные взносы"/></span></div>
+      <div className="uk-width-expand" uk-leader="true" ><span className="uk-text-secondary uk-text-normal uk-text-small">{lang==='ru' ? ru.output.opv : kz.output.opv} </span></div>
       <div className="uk-text-emphasis"><span className="uk-text-bold uk-text-emphasis ">{data.NumOfYearsBeforeExhAccumOPV === '' ? '**' :data.NumOfYearsBeforeExhAccumOPV}</span> лет</div>
   </div>
 
   <div className="uk-flex uk-flex-bottom uk-margin-small-top uk-text-left uk-margin-medium-left uk-margin-small-right">
-      <div className="uk-width-expand" uk-leader="true" ><span className="uk-text-secondary uk-text-normal uk-text-small">{lang==='ru' ? ru.output.oppv : kz.output.oppv} <InfoBlock text="Добровольные пенсионные взносы"/></span></div>
+      <div className="uk-width-expand" uk-leader="true" ><span className="uk-text-secondary uk-text-normal uk-text-small">{lang==='ru' ? ru.output.oppv : kz.output.oppv} </span></div>
       <div className="uk-text-small"><span className="uk-text-bold uk-text-emphasis ">{data.NumOfYearsBeforeExhAccumOPPV === '' ? '**' :data.NumOfYearsBeforeExhAccumOPPV}</span> лет</div>
   </div>
 
   <div className="uk-flex uk-flex-bottom uk-margin-small-top uk-text-left uk-margin-medium-left uk-margin-small-right">
-      <div className="uk-width-expand" uk-leader="true" ><span className="uk-text-secondary uk-text-normal  uk-text-small">{lang==='ru' ? ru.output.dpv : kz.output.dpv} <InfoBlock text="Добровольные пенсионные взносы"/></span></div>
+      <div className="uk-width-expand" uk-leader="true" ><span className="uk-text-secondary uk-text-normal  uk-text-small">{lang==='ru' ? ru.output.dpv : kz.output.dpv} </span></div>
       <div className="uk-text-small"><span className="uk-text-bold uk-text-emphasis ">{data.NumOfYearsBeforeExhAccumDPV === '' ? '**' :data.NumOfYearsBeforeExhAccumDPV}</span> лет</div>
   </div>
   <hr className="deviderRes"/>
 
   <div className="uk-flex uk-flex-bottom uk-text-left uk-margin-small-left uk-margin-small-right">
-      <div className="uk-width-expand" uk-leader="true" ><span className="uk-text-secondary uk-text-normal uk-text-small">{lang==='ru' ? ru.output.solidarity : kz.output.solidarity} <InfoBlock text="Добровольные пенсионные взносы"/></span></div>
+      <div className="uk-width-expand" uk-leader="true" ><span className="uk-text-secondary uk-text-normal uk-text-small">{lang==='ru' ? ru.output.solidarity : kz.output.solidarity} </span></div>
       <div className="uk-text-emphasis uk-text-bold uk-text-small">{data.SolidarityPension === '' ? '***' : parseFloat(data.SolidarityPension).toLocaleString()} <span className="tenge">&#8376;</span></div>
   </div>
   <hr className="deviderRes"/>
   
   <div className="uk-flex uk-flex-bottom uk-text-left uk-margin-small-left uk-margin-small-right">
-      <div className="uk-width-expand" uk-leader="true" ><span className="uk-text-secondary uk-text-normal uk-text-small">{lang==='ru' ? ru.output.basic : kz.output.basic} <InfoBlock text="Добровольные пенсионные взносы"/></span></div>
+      <div className="uk-width-expand" uk-leader="true" ><span className="uk-text-secondary uk-text-normal uk-text-small">{lang==='ru' ? ru.output.basic : kz.output.basic} </span></div>
       <div className="uk-text-emphasis uk-text-bold uk-text-small">{data.BasicPension === '' ? '***' : parseFloat(data.BasicPension).toLocaleString()} <span className="tenge">&#8376;</span></div>
   </div>
   <hr className="deviderRes"/>
 
   <div className="uk-flex uk-flex-bottom uk-text-left uk-margin-small-left uk-margin-small-right">
-      <div className="uk-width-expand" uk-leader="true" ><span className="uk-text-secondary uk-text-normal uk-text-small">{lang==='ru' ? ru.output.pension_enpf : kz.output.pension_enpf}<InfoBlock text="Добровольные пенсионные взносы"/> </span></div>
+      <div className="uk-width-expand" uk-leader="true" ><span className="uk-text-secondary uk-text-normal uk-text-small">{lang==='ru' ? ru.output.pension_enpf : kz.output.pension_enpf} </span></div>
       <div className="uk-text-emphasis uk-text-bold uk-text-small">{data.SolidarityPension === '' ? '***' : (parseFloat(data.EnpfPensionOPV)+parseFloat(data.EnpfPensionOPPV)+parseFloat(data.EnpfPensionDPV)).toLocaleString()} <span className="tenge" >&#8376;</span></div>
   </div>
 
@@ -203,41 +203,41 @@ export default ({ data ,onClick,disabled,lang}:any) =>
     <div className="uk-text-left uk-margin-small-left uk-margin-small-right uk-text-small">{lang==='ru' ? ru.output.what_more : kz.output.what_more}</div>
 
     <div className="uk-flex uk-flex-bottom  uk-text-left uk-margin-medium-left uk-margin-small-right">
-        <div className="uk-width-expand" uk-leader="true" ><span className="uk-text-secondary uk-text-normal uk-text-small">{lang==='ru' ? ru.output.opv : kz.output.opv} <InfoBlock text="Добровольные пенсионные взносы"/></span></div>
+        <div className="uk-width-expand" uk-leader="true" ><span className="uk-text-secondary uk-text-normal uk-text-small">{lang==='ru' ? ru.output.opv : kz.output.opv} </span></div>
         <div className="uk-text-emphasis uk-text-bold uk-text-small">{data.EnpfPensionOPV === '' ? '***' : parseFloat(data.EnpfPensionOPV).toLocaleString()} <span className="tenge">&#8376;</span></div>
     </div>
 
     <div className="uk-flex uk-flex-bottom uk-margin-small-top uk-text-left uk-margin-medium-left uk-margin-small-right">
-      <div className="uk-width-expand" uk-leader="true" ><span className="uk-text-secondary uk-text-normal uk-text-small">{lang==='ru' ? ru.output.oppv : kz.output.oppv} <InfoBlock text="Добровольные пенсионные взносы"/></span></div>
+      <div className="uk-width-expand" uk-leader="true" ><span className="uk-text-secondary uk-text-normal uk-text-small">{lang==='ru' ? ru.output.oppv : kz.output.oppv}</span></div>
       <div className="uk-text-emphasis uk-text-bold uk-text-small">{data.EnpfPensionOPPV === '' ? '***' : parseFloat(data.EnpfPensionOPPV).toLocaleString()} <span className="tenge">&#8376;</span></div>
     </div>
 
     <div className="uk-flex uk-flex-bottom uk-margin-small-top uk-text-left uk-margin-medium-left uk-margin-small-right">
-        <div className="uk-width-expand" uk-leader="true" ><span className="uk-text-secondary uk-text-normal uk-text-small">{lang==='ru' ? ru.output.dpv : kz.output.dpv} <InfoBlock text="Добровольные пенсионные взносы"/></span></div>
+        <div className="uk-width-expand" uk-leader="true" ><span className="uk-text-secondary uk-text-normal uk-text-small">{lang==='ru' ? ru.output.dpv : kz.output.dpv} </span></div>
         <div className="uk-text-emphasis uk-text-bold uk-text-small">{data.EnpfPensionDPV === '' ? '***' : parseFloat(data.EnpfPensionDPV).toLocaleString()} <span className="tenge">&#8376;</span></div>
     </div>
   <hr className="deviderRes"/>
 
   <div className="uk-flex uk-flex-bottom uk-margin-remove-top uk-text-left uk-margin-small-left uk-margin-small-right">
-      <div className="uk-width-" uk-leader="true" ><span className="uk-text-secondary uk-text-normal uk-text-small">{lang==='ru' ? ru.output.pens_annunity : kz.output.pens_annunity} <InfoBlock text="Добровольные пенсионные взносы"/></span></div>
+      <div className="uk-width-" uk-leader="true" ><span className="uk-text-secondary uk-text-normal uk-text-small">{lang==='ru' ? ru.output.pens_annunity : kz.output.pens_annunity} </span></div>
       <div className="uk-text-emphasis uk-text-bold uk-text-small uk-text-bottom">{data.PensionAnnuity === '' ? '***' : parseFloat(data.PensionAnnuity).toLocaleString()} <span className="tenge">&#8376;</span></div>
   </div>
   <hr className="deviderRes"/>
 
   <div className="uk-flex uk-flex-bottom uk-margin-small-top uk-text-left uk-margin-small-left uk-margin-small-right">
-      <div className="uk-width-expand" uk-leader="true" ><span className="uk-text-secondary uk-text-small uk-text-bold">{lang==='ru' ? ru.output.sum : kz.output.sum}<InfoBlock text="Добровольные пенсионные взносы"/></span></div>
+      <div className="uk-width-expand" uk-leader="true" ><span className="uk-text-secondary uk-text-small uk-text-bold">{lang==='ru' ? ru.output.sum : kz.output.sum}</span></div>
       <div className="uk-text-emphasis uk-text-bold uk-text-small">{data.TotalSum === '' ? '***' : parseFloat(data.TotalSum).toLocaleString()} <span className="tenge">&#8376;</span></div>
   </div>
   <hr className="deviderRes"/>
 
   <div className="uk-flex uk-flex-bottom uk-margin-small-top uk-text-left uk-margin-small-left uk-margin-small-right">
-      <div className="uk-width-expand" uk-leader="true" ><span className="uk-text-secondary uk-text-normal uk-text-small">{lang==='ru' ? ru.output.prognoz : kz.output.prognoz}<InfoBlock text="Добровольные пенсионные взносы"/></span></div>
+      <div className="uk-width-expand" uk-leader="true" ><span className="uk-text-secondary uk-text-normal uk-text-small">{lang==='ru' ? ru.output.prognoz : kz.output.prognoz}</span></div>
       <div className="uk-text-emphasis uk-text-bold uk-text-small">{data.SalaryBeforePension === '' ? '***' : parseFloat(data.SalaryBeforePension).toLocaleString()} <span className="tenge">&#8376;</span></div>
   </div>
   <hr className="deviderRes"/>
 
   <div className="uk-flex uk-flex-bottom uk-margin-small-top uk-text-left uk-margin-small-left uk-margin-small-right">
-      <div className="uk-width-expand" uk-leader="true" ><span className="uk-text-secondary uk-text-bold uk-text-small">{lang==='ru' ? ru.output.koef : kz.output.koef} <InfoBlock text="Добровольные пенсионные взносы"/></span></div>
+      <div className="uk-width-expand" uk-leader="true" ><span className="uk-text-secondary uk-text-bold uk-text-small">{lang==='ru' ? ru.output.koef : kz.output.koef}</span></div>
       <div className="uk-text-emphasis uk-text-bold uk-text-small"> {data.Koef === '' ? '***' : parseFloat(data.Koef).toLocaleString()}%</div>
   </div>
   <hr className="deviderRes"/>

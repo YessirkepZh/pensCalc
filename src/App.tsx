@@ -4,8 +4,6 @@ import InputExp from './components/InputExp';
 import InputSalary from './components/InputSalary';
 import SelectPeriod from './components/SelectPeriod';
 import InfoBlock from './components/InfoBlock';
-// import DatePicker from './components/DatePicker'
-
 import axios from 'axios';
 import base64  from 'base-64';
 import {Response,EnpfCalculatorOptimist,EnpfCalculatorRealist,EnpfCalculatorPessimist, inputObj, outputObj} from './components/interface';
@@ -15,8 +13,6 @@ import './App.css';
 import Tabs from './components/Tabs'
 import { Button, FormControlLabel, RadioGroup, Radio } from '@material-ui/core';
 import Spinner from './components/Spinner';
-import { useTranslation } from 'react-i18next';
-import { withTranslation } from 'react-i18next';
 import ru from './locale/ru.json'
 import kz from './locale/kz.json'
 
@@ -108,9 +104,10 @@ export default class  App extends React.Component<AppProps,AppState> {
     this.handleSubmit = this.handleSubmit.bind(this);
     this.sendEmail = this.sendEmail.bind(this);
     this.ResetTextInput = this.ResetTextInput.bind(this);
-
+    this.alertInitial();
   }
-
+  
+  //хук изменении инпутов входных параметров 
   handleChange(event:any) {
     // console.log(this.state.input)
     // console.log(this.state.input.Exp1998.substring(this.state.input.Exp1998.indexOf(".")+1))
@@ -233,11 +230,30 @@ export default class  App extends React.Component<AppProps,AppState> {
     }
     catch(ex){console.error(ex)}
   }
+
+  //alert при загрузки страницы 
+  alertInitial(){
+    Swal.fire({
+      text: this.state.lang==='ru' ? ru.alert.initial : kz.alert.initial,
+      icon:'info',
+      showConfirmButton:false,
+      showCancelButton:true,
+      cancelButtonText:'OK',
+      cancelButtonColor:'#2A6BCB',
+      focusCancel:false
+    })
+  }
+
   //сброс всех полей (выходных / входных)
   ResetTextInput() {
     try{
-      console.log('reset')
-      this.textInput.current.reset();
+      // console.log('reset')
+      // this.textInput.current.reset();
+      this.setState({output:outputObj});
+      this.setState({input:inputObj});
+      this.setState({button:true});
+     
+      
     }
     catch(ex){console.error(ex)}
   }
@@ -442,16 +458,8 @@ export default class  App extends React.Component<AppProps,AppState> {
       }
     })
   }
-  //спинер загрузки 
-  Loader (){
-     return(
-      <div className="uk-overlay-primary uk-position-cover" >
-          <div className="uk-position-center">
-            <div uk-spinner="ratio: 2" ></div>
-          </div>
-      </div>
-     )
-  }
+
+
   // конверт формата даты 12.12.1989
   formatDate (input:any) {
     var datePart = input.match(/\d+/g),
@@ -490,6 +498,7 @@ render(){
           <form className="uk-text-left" ref={this.textInput}>
 
             <h4 className="uk-heading-line uk-text-center"><span> {this.state.lang==='ru' ? ru.input.title : kz.input.title}</span></h4>
+             
               <div className="backGrey">
                 <span className="uk-text-secondary uk-text-small uk-text-normal uk-margin-small-left ">{this.state.lang==='ru' ? ru.input.sex : kz.input.sex}</span>
 
@@ -503,7 +512,7 @@ render(){
                   row 
                   aria-label="position" 
                   name="position" 
-                  defaultValue="top" 
+                  defaultValue="M" 
                   >
                   <FormControlLabel
                     value="M"
@@ -512,7 +521,7 @@ render(){
                     onClick={this.handleChange}
                     labelPlacement="start"
                     id="male"
-                    className="uk-margin-small-left uk-input uk-input-small uk-text-small uk-text-secondary uk-text-left uk-width-1-3 uk-margin-small-bottom uk-margin-remove-top"
+                    className="uk-margin-small-left uk-input  uk-text-left uk-width-1-3 margin-bottom radio-button uk-text-secondary uk-text-small uk-text-normal"
                     /> 
 
                   <FormControlLabel
@@ -523,50 +532,71 @@ render(){
                     onClick={this.handleChange}
                     id="female"
                     labelPlacement="start"
-                    className="uk-margin-small-left uk-input uk-input-small uk-text-small uk-text-secondary uk-text-left uk-width-1-3"
+                    className="uk-margin-small-left uk-input  uk-text-left uk-width-1-3 radio-button uk-text-secondary uk-text-small uk-text-normal"
                     />
                 </RadioGroup>
 
               </div>
 
-              <div className="uk-margin-small-bottom">
+              <div className="margin-bottom">
                 <div className="uk-text-secondary uk-text-small uk-text-normal uk-margin-small-left">{this.state.lang==='ru' ? ru.input.birthday : kz.input.birthday}</div>
                 <input id="BirthDate" className="uk-input  uk-width-1-2 uk-form-small uk-margin-small-left" type="date" onChange={this.handleChange} />
               </div>
+
               <div className="backGrey">
                 <InputExp id1="exp1998year" id2="exp1998month" handleChange={this.handleChange} title={this.state.lang==='ru' ? ru.input.exp_to : kz.input.exp_to}/>
               </div>
               
               <div className="">
-                <InputExp id1="expYear" id2="expYearM" handleChange={this.handleChange} title={this.state.lang==='ru' ? ru.input.exp_after : kz.input.exp_after}/>
+                <InputExp id1="expYear" id2="expYearM" handleChange={this.handleChange} title={this.state.lang==='ru' ? ru.input.exp_after : kz.input.exp_after} />
               </div>
 
               <div className="backGrey">
-                <InputSalary id="AverageSal"  value={this.state.input.AverageSal} handleChange={this.handleChange} title={this.state.lang==='ru' ? ru.input.average : kz.input.average}/>
-              <div>{this.textText}</div>
+                <InputSalary id="AverageSal"  value={this.state.input.AverageSal} handleChange={this.handleChange} title={this.state.lang==='ru' ? ru.input.average : kz.input.average} tooltipText ={this.state.lang==='ru' ? ru.tooltip.ave_salary_des : kz.tooltip.ave_salary_des}/>
+                {/* <div>{this.textText}</div> */}
               </div>
 
-              <div className="uk-margin-small-bottom">
-
-                <span className="uk-text-secondary uk-text-small uk-text-normal uk-margin-small-left">{this.state.lang==='ru' ? ru.input.period_pay : kz.input.period_pay}<InfoBlock text={this.state.lang==='ru' ? ru.input.title : kz.input.title}/></span>
-                <div className="uk-margin-small-left">
-                  <SelectPeriod change={this.handleChange} id="PeriodPayOPV" classN={"uk-select uk-form-small uk-text-right uk-width-1-5 "}/> 
-                </div>
-                
+              <div className="uk-margin-small-left margin-bottom">
+                  <SelectPeriod change={this.handleChange} id="PeriodPayOPV"  lang={this.state.lang}/> 
               </div>
 
               <ul uk-accordion="multiple: true;animation:true" className="uk-margin-remove uk-text-left " >
                 <li className="uk-margin-small-bottom"> 
                     <a className="uk-accordion-title backGrey" href="#" onClick={()=>this.setState({enlarge:!this.state.enlarge})}>
-                      <span className="uk-text-secondary uk-text-small uk-text-normal uk-margin-small-left">{this.state.lang==='ru' ? ru.input.enlarge_sal : kz.input.enlarge_sal}</span> 
+                      <span className="uk-text-secondary uk-text-small uk-text-normal uk-margin-small-left">{this.state.lang==='ru' ? ru.input.enlarge_sal : kz.input.enlarge_sal} <InfoBlock text={this.state.lang==='ru' ? ru.tooltip.enlarge_salary_des : kz.tooltip.enlarge_salary_des}/></span> 
                     </a>
-                    <div className="uk-accordion-content uk-text-small uk-flex uk-flex-left uk-margin-small-top uk-margin-small-left uk-margin-small-bottom">
+                    <div className="uk-accordion-content uk-text-small uk-flex uk-flex-left  uk-margin-small-left ">
                         {this.state.typeSal=== true ? this.InputTenge() : this.InputPercent()}
                         
                         <div uk-switcher="animation: uk-animation-fade; toggle: > *" className="uk-margin-remove-top uk-margin-small-left ">
                           <button className="uk-button uk-button-default uk-button-small uk-text-lowercase" type="button" onClick={()=> {this.setState({typeSal:true})  }}><span>&#8376;</span></button>
                           <button className="uk-button uk-button-default uk-button-small uk-text-lowercase" type="button" onClick={()=> this.setState({typeSal:false})}>%</button>
                         </div>
+                         {/* <RadioGroup
+                            row 
+                            aria-label="position" 
+                            name="position" 
+                            defaultValue="top" 
+                            >
+                            <FormControlLabel
+                              value="percent"
+                              control={<Radio/>}
+                              label="%"
+                              onClick={()=> {this.setState({typeSal:true})}}
+                              labelPlacement="end"
+                              className="uk-margin-small-left uk-input  uk-text-left uk-width-1-3 margin-bottom radio-button"
+                              /> 
+
+                            <FormControlLabel
+                              value="tenge"
+                              control={<Radio
+                              />}
+                              label="&#8376;"
+                              onClick={()=> {this.setState({typeSal:false})}}
+                              labelPlacement="end"
+                              className="uk-margin-small-left uk-input  uk-text-left uk-width-1-3 radio-button"
+                              />
+                          </RadioGroup> */}
 
                     </div>
                 </li>
@@ -608,7 +638,7 @@ render(){
                           </div>
 
                           <div className="uk-flex uk-flex-column uk-margin-small-left">
-                            <span className="uk-text-secondary uk-text-normal uk-text-small">{this.state.lang==='ru' ? ru.input.title : kz.input.title}</span>
+                            <span className="uk-text-secondary uk-text-normal uk-text-small">{this.state.lang==='ru' ? ru.input.period_pay : kz.input.period_pay}</span>
                              <SelectPeriod  change={this.handleChange} id="PeriodPayDPV" classN="uk-select uk-form-small uk-margin-small-bottom uk-text-right uk-width-1-5"/>
                           </div>
                        
