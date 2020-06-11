@@ -27,7 +27,7 @@ function renderTableData(data:any) {
  }
  function renderTableHeader(lang:string) {
    
-    let header = (lang == "ru " ? 
+    let header = (lang == "ru" ? 
       [
         ru.table.year,
         ru.table.age,
@@ -156,7 +156,7 @@ export default ({ data ,onClick,disabled,lang}:any) =>
 
   <div className="uk-flex uk-flex-bottom uk-text-left uk-margin-small-left uk-margin-small-right" >
       <div className="uk-width-expand" uk-leader="true" >
-        <span className="uk-text-secondary uk-text-normal uk-text-small">{lang==='ru' ? ru.output.payout_age_opv : kz.output.payout_age_opv} <InfoBlock text="Добровольные пенсионные взносыДобровольные пенсионные взносыДобровольные пенсионные взносы"/></span>
+        <span className="uk-text-secondary uk-text-normal uk-text-small">{lang==='ru' ? ru.output.payout_age_opv : kz.output.payout_age_opv} </span>
       </div>
       <div className="uk-text-small uk-text-right">
         <span className="uk-text-bold uk-text-emphasis "> {data.Retirement.Age ==='' ? '**':data.Retirement.Age}</span> {lang==='ru' ? ru.input.year : kz.input.year} <span className="uk-text-bold uk-text-emphasis ">{data.Retirement.Dt ==='' ? '**':data.Retirement.Dt}</span>
@@ -273,11 +273,13 @@ export default ({ data ,onClick,disabled,lang}:any) =>
         <button className="uk-modal-close-default" type="button" uk-close="true"></button>
 
         <table id="table" className="uk-table">
-               <tbody>
-                 <tr>{renderTableHeader(lang)}</tr>
-                  {renderTableData(data.EnpfCalcTable)}
-               </tbody>
-            </table>
+
+          <tbody>
+            <tr>{renderTableHeader(lang)}</tr>
+            {renderTableData(data.EnpfCalcTable)}
+          </tbody>
+
+        </table>
     </div>
   </div>
   

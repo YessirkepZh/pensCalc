@@ -6,7 +6,7 @@ import SelectPeriod from './components/SelectPeriod';
 import InfoBlock from './components/InfoBlock';
 import axios from 'axios';
 import base64  from 'base-64';
-import {Response,EnpfCalculatorOptimist,EnpfCalculatorRealist,EnpfCalculatorPessimist, inputObj, outputObj} from './components/interface';
+import {Response,EnpfCalculatorOptimist,EnpfCalculatorRealist,EnpfCalculatorPessimist, inputObj, outputObj,Request} from './components/interface';
 import Swal from 'sweetalert2';
 import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
 import './App.css';
@@ -18,39 +18,14 @@ import kz from './locale/kz.json'
 
 
 import queryString from 'query-string';
-import { Route } from 'react-router-dom';
+import { Route, Router } from 'react-router-dom';
 
  
 
 interface AppProps { 
 }
 export interface AppState {
-  input:{
-  Sex:string;
-  BirthDate: string;
-  Exp1998:string;
-  ExpYear:string;
-  AverageSal:string;
-  EnlargeSal:string;
-  EnlargeType:string;
-  EnlargeTenge:string;
-  EnlargePercent:string;
-  PeriodPayOPV:string;
-  OPV:string;
-  SumOPV:string;
-  OPPV:string;
-  SumOPPV:string;
-  DPV:string;
-  SumDPV:string;
-  SumDPVtype:string;
-  SumDPVtenge:string;
-  SumDPVpercent:string;
-  PeriodPayDPV:string;
-  PayoutAge:string;
-  PayoutMonth:string;
-  Lang:string;
-  CalcType:string;
-  email:string;},
+  input:Request,
   output:{
     EnpfCalculatorRealist:EnpfCalculatorRealist,
     EnpfCalculatorOptimist:EnpfCalculatorOptimist,
@@ -65,6 +40,10 @@ export interface AppState {
   typeDpv:boolean,
   enlarge:boolean,
   lang:string,
+  exp1998:string,
+  exp:string,
+  perOpv:string,
+  perDpv:string
 
 };
 let result = {} as Response;
@@ -91,8 +70,11 @@ export default class  App extends React.Component<AppProps,AppState> {
       typeSal:true,
       typeDpv:true,
       enlarge:false,
-      lang:'ru'
-      
+      lang:this.setLang(),
+      exp1998:'',
+      exp:'',
+      perOpv:'12',
+      perDpv:'12'
     };
 
     this.myRef = React.createRef(); 
@@ -105,34 +87,38 @@ export default class  App extends React.Component<AppProps,AppState> {
     this.sendEmail = this.sendEmail.bind(this);
     this.ResetTextInput = this.ResetTextInput.bind(this);
     this.alertInitial();
+    
+
+
   }
   
   //хук изменении инпутов входных параметров 
   handleChange(event:any) {
-    // console.log(this.state.input)
+    
     // console.log(this.state.input.Exp1998.substring(this.state.input.Exp1998.indexOf(".")+1))
     // console.log(this.state.input.Exp1998.substr(0, this.state.input.Exp1998.indexOf('.')+1)); 
     try{
       let id = event.target.id;
       let input = this.state.input;
+        if (event.target.value=='male'||event.target.value=='female'){
+          id=event.target.value;
+        }
       switch (id) {
         case 'exp1998year':
-          input.Exp1998=(parseInt(event.target.value) < 0 ? '0' : parseInt(event.target.value) >100 ? '100' :event.target.value)  +this.state.input.Exp1998.substring(this.state.input.Exp1998.indexOf("."));
+          input.Exp1998=parseInt(event.target.value) < 0 ? '0' : parseInt(event.target.value) >100 ? '100' : event.target.value;
           this.callbackFunctionInput(input);
           break;
         
         case 'exp1998month':
-          let month= (parseFloat(event.target.value)/12).toFixed(2).toString();
-          input.Exp1998=this.state.input.Exp1998.substr(0, this.state.input.Exp1998.indexOf('.'))+'.' +  month.substr(0, month.indexOf('.'));
+          this.setState({exp1998:parseInt(event.target.value) < 0 ? '0' : parseInt(event.target.value) >12 ? '12' : event.target.value});
           break;
           
         case 'expYearM':
-          let month2= (parseFloat(event.target.value)/12).toFixed(2).toString();
-          input.ExpYear=this.state.input.ExpYear.substr(0, this.state.input.ExpYear.indexOf('.'))+'.' +  month2.substr(0, month2.indexOf('.'));
+          this.setState({exp:parseInt(event.target.value) < 0 ? '0' : parseInt(event.target.value) >12 ? '12' : event.target.value});
           break;
 
         case 'expYear':
-          input.ExpYear=event.target.value+this.state.input.ExpYear.substring(this.state.input.ExpYear.indexOf("."));
+          input.ExpYear=parseInt(event.target.value) < 0 ? '0' : parseInt(event.target.value) >100 ? '100' : event.target.value;
           this.callbackFunctionInput(input);
           break;
         case 'male':
@@ -150,24 +136,20 @@ export default class  App extends React.Component<AppProps,AppState> {
           break;
 
         case 'PeriodPayOPV':
-          input.PeriodPayOPV= event.target.value;
-          this.callbackFunctionInput(input);
+          this.setState({perOpv:event.target.value});
           break;
 
         case 'SumOPV':
           input.SumOPV = event.target.value === '' ? '' : parseFloat((event.target.value).split(' ').join('')).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1 ');
-          input.OPV= (this.state.opv).toString();
           this.callbackFunctionInput(input);
           break;
         case 'SumOPPV':
           input.SumOPPV=event.target.value === '' ? '' : parseFloat((event.target.value).split(' ').join('')).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1 ');
-          input.OPPV = (this.state.oppv).toString();
           this.callbackFunctionInput(input);
           break;
 
         case 'SumDPV':
           input.SumDPV=event.target.value === '' ? '' : parseFloat((event.target.value).split(' ').join('')).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1 ');
-          input.DPV = (this.state.dpv).toString();
           this.callbackFunctionInput(input);
           break;
 
@@ -178,15 +160,11 @@ export default class  App extends React.Component<AppProps,AppState> {
 
         case 'EnlargeTenge':
           input.EnlargeTenge=event.target.value === '' ? '' : parseFloat((event.target.value).split(' ').join('')).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1 ');
-          input.EnlargeType = (this.state.typeSal).toString();
-          input.EnlargeSal = (this.state.enlarge).toString();
           this.callbackFunctionInput(input);
           break;
 
         case 'EnlargePercent':
           input.EnlargePercent = event.target.value;
-          input.EnlargeType = (this.state.typeSal).toString();
-          input.EnlargeSal = (this.state.enlarge).toString();
           if (parseInt(event.target.value) < 0) input.EnlargePercent = '0';
           if (parseInt(event.target.value) > 100) input.EnlargePercent  = '100';
           this.callbackFunctionInput(input);
@@ -194,13 +172,11 @@ export default class  App extends React.Component<AppProps,AppState> {
                 
         case 'SumDPVtenge':
           input.SumDPVtenge=event.target.value === '' ? '' : parseFloat((event.target.value).split(' ').join('')).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1 ');
-          input.SumDPVtype = (this.state.typeDpv).toString();
           this.callbackFunctionInput(input);
           break;
 
         case 'SumDPVpercent':
           input.SumDPVpercent=event.target.value;
-          input.SumDPVtype = (this.state.typeDpv).toString();
           if (parseInt(event.target.value) < 0) input.SumDPVpercent = '0';
           if (parseInt(event.target.value) > 100) input.SumDPVpercent  = '100';
           this.callbackFunctionInput(input);
@@ -219,7 +195,6 @@ export default class  App extends React.Component<AppProps,AppState> {
           break;
 
         case 'BirthDate':
-          // console.log(event.target.value);
           input.BirthDate = this.formatDate(event.target.value);
           this.callbackFunctionInput(input);
           break;
@@ -227,6 +202,7 @@ export default class  App extends React.Component<AppProps,AppState> {
         default:
           break;
       }
+      console.log(this.state.input)
     }
     catch(ex){console.error(ex)}
   }
@@ -243,11 +219,14 @@ export default class  App extends React.Component<AppProps,AppState> {
       focusCancel:false
     })
   }
+  // установка языка интерфейса
+  setLang(){
+    return window.location.pathname.split('/pensCalc/')[1] ==='' ? 'ru' : window.location.pathname.split('/pensCalc/')[1]; 
+  }
 
   //сброс всех полей (выходных / входных)
   ResetTextInput() {
     try{
-      // console.log('reset')
       // this.textInput.current.reset();
       this.setState({output:outputObj});
       this.setState({input:inputObj});
@@ -262,7 +241,7 @@ export default class  App extends React.Component<AppProps,AppState> {
   isValidInputs():boolean{
 
     let input= this.state.input;
-    // console.log(input);
+
     if(this.state.input.EnlargeTenge===''){
       input.EnlargeTenge='0'
       this.callbackFunctionInput(input);
@@ -303,28 +282,51 @@ export default class  App extends React.Component<AppProps,AppState> {
       input.PayoutMonth='0';
       this.callbackFunctionInput(input);
     }
+    if(this.state.input.Exp1998===''&& this.state.exp1998==='' ){
+      input.Exp1998='0.00';
+      this.callbackFunctionInput(input);
+    }
+    if(this.state.input.ExpYear===''&&this.state.exp===''){
+      input.ExpYear='0.00';
+      this.callbackFunctionInput(input);
+    }
     return true
   }
 
   // возвращает json входных данных без раздярностей
-  revmoveSpaceBetweenDigits(input:any){
-    input.AverageSal=input.AverageSal.split(' ').join('');
-    input.SumOPV=input.SumOPV.split(' ').join('');
-    input.SumOPPV=input.SumOPPV.split(' ').join('');
-    input.SumDPV=input.SumDPV.split(' ').join('');
-    input.EnlargeTenge=input.EnlargeTenge.split(' ').join('');
-    input.SumDPVtenge=input.SumDPVtenge.split(' ').join('');
-    input.PayoutMonth=input.PayoutMonth.split(' ').join('');
-    return JSON.stringify(input);
+  revmoveSpaceBetweenDigits(input:Request){
+    try
+    {
+      input.AverageSal=input.AverageSal.split(' ').join('');
+      input.SumOPV=input.SumOPV.split(' ').join('');
+      input.SumOPPV=input.SumOPPV.split(' ').join('');
+      input.SumDPV=input.SumDPV.split(' ').join('');
+      input.EnlargeTenge=input.EnlargeTenge.split(' ').join('');
+      input.SumDPVtenge=input.SumDPVtenge.split(' ').join('');
+      input.PayoutMonth=input.PayoutMonth.split(' ').join('');
+      input.Exp1998= ( parseInt(input.Exp1998) + parseFloat(this.state.exp1998 ===''? '' : (parseInt(this.state.exp1998)/12).toFixed(2) ) ).toString();
+      input.ExpYear= ( parseInt(input.ExpYear) + parseFloat(this.state.exp ===''? '' : (parseInt(this.state.exp)/12).toFixed(2) ) ).toString();
+      input.PeriodPayOPV =this.state.perOpv;
+      input.PeriodPayDPV =this.state.perDpv;
+      input.OPV = this.state.opv.toString();
+      input.OPPV = this.state.opv.toString();
+      input.DPV = this.state.dpv.toString();
+      input.EnlargeType = this.state.typeSal.toString();
+      input.EnlargeSal = this.state.enlarge.toString();
+      input.SumDPVtype = this.state.typeDpv.toString();
+      input.Lang = this.state.lang==='ru' ? '0' : '1';
+      return JSON.stringify(input);
+    }
+    catch(ex){console.error(ex)}  
   }
 
   //расчитать результаты 
   handleSubmit(event:any) {
     try {
        if(this.isValidInputs()===true){
-         
+         console.log( this.revmoveSpaceBetweenDigits(this.state.input))
           this.setState({loader:true});
-          axios.post(`https://mobile.enpf.kz/JasperReports/api/EnpfCalculator2`, this.revmoveSpaceBetweenDigits(this.state.input) )
+          axios.post(`https://mobile.enpf.kz/JasperReports/api/EnpfCalculator2`, this.revmoveSpaceBetweenDigits(this.state.input))
           .then(res => {
             this.setState({loader:false});
             if(res.data.code === "0"){
@@ -367,10 +369,10 @@ export default class  App extends React.Component<AppProps,AppState> {
 
                       }
                       if(res.data.code === "-1"){
-                        Swal.fire('Ошибка', res.data.message, 'error')
+                        Swal.fire('', res.data.message, 'error')
               
                       }
-                    }).catch((ex)=>{  Swal.fire('Ошибка', res.data.message, 'error')});
+                    }).catch((ex)=>{  Swal.fire('', res.data.message, 'error')});
 
                   }
                 })
@@ -380,7 +382,7 @@ export default class  App extends React.Component<AppProps,AppState> {
             }
             if(res.data.code === "-1"){
               Swal.fire({
-                title:'Ошибка', 
+                title:'', 
                 text:res.data.message,
                 icon: 'error',
                 confirmButtonColor: '#2A6BCB'})
@@ -483,9 +485,11 @@ export default class  App extends React.Component<AppProps,AppState> {
  
 render(){
 
+ 
 
   return (
     
+  
 
     <div className="App">
 
@@ -512,10 +516,10 @@ render(){
                   row 
                   aria-label="position" 
                   name="position" 
-                  defaultValue="M" 
+                  defaultValue="male" 
                   >
                   <FormControlLabel
-                    value="M"
+                    value="male"
                     control={<Radio/>}
                     label="Мужской"
                     onClick={this.handleChange}
@@ -525,7 +529,7 @@ render(){
                     /> 
 
                   <FormControlLabel
-                    value="F"
+                    value="female"
                     control={<Radio
                     />}
                     label="Женский"
@@ -544,11 +548,11 @@ render(){
               </div>
 
               <div className="backGrey">
-                <InputExp id1="exp1998year" id2="exp1998month" handleChange={this.handleChange} title={this.state.lang==='ru' ? ru.input.exp_to : kz.input.exp_to}/>
+                <InputExp id1="exp1998year" id2="exp1998month" handleChange={this.handleChange} title={this.state.lang==='ru' ? ru.input.exp_to : kz.input.exp_to} value={this.state.exp1998}/>
               </div>
               
               <div className="">
-                <InputExp id1="expYear" id2="expYearM" handleChange={this.handleChange} title={this.state.lang==='ru' ? ru.input.exp_after : kz.input.exp_after} />
+                <InputExp id1="expYear" id2="expYearM" handleChange={this.handleChange} title={this.state.lang==='ru' ? ru.input.exp_after : kz.input.exp_after} value={this.state.exp}/>
               </div>
 
               <div className="backGrey">
@@ -557,13 +561,13 @@ render(){
               </div>
 
               <div className="uk-margin-small-left margin-bottom">
-                  <SelectPeriod change={this.handleChange} id="PeriodPayOPV"  lang={this.state.lang}/> 
+                  <SelectPeriod change={this.handleChange} id="PeriodPayOPV"  lang={this.state.lang} val={this.state.perOpv}/> 
               </div>
 
               <ul uk-accordion="multiple: true;animation:true" className="uk-margin-remove uk-text-left " >
                 <li className="uk-margin-small-bottom"> 
                     <a className="uk-accordion-title backGrey" href="#" onClick={()=>this.setState({enlarge:!this.state.enlarge})}>
-                      <span className="uk-text-secondary uk-text-small uk-text-normal uk-margin-small-left">{this.state.lang==='ru' ? ru.input.enlarge_sal : kz.input.enlarge_sal} <InfoBlock text={this.state.lang==='ru' ? ru.tooltip.enlarge_salary_des : kz.tooltip.enlarge_salary_des}/></span> 
+                      <span className="uk-text-secondary uk-text-small uk-text-normal uk-margin-small-left">{this.state.lang==='ru' ? ru.input.enlarge_sal : kz.input.enlarge_sal} </span> 
                     </a>
                     <div className="uk-accordion-content uk-text-small uk-flex uk-flex-left  uk-margin-small-left ">
                         {this.state.typeSal=== true ? this.InputTenge() : this.InputPercent()}
@@ -639,7 +643,7 @@ render(){
 
                           <div className="uk-flex uk-flex-column uk-margin-small-left">
                             <span className="uk-text-secondary uk-text-normal uk-text-small">{this.state.lang==='ru' ? ru.input.period_pay : kz.input.period_pay}</span>
-                             <SelectPeriod  change={this.handleChange} id="PeriodPayDPV" classN="uk-select uk-form-small uk-margin-small-bottom uk-text-right uk-width-1-5"/>
+                             <SelectPeriod  change={this.handleChange} id="PeriodPayDPV" classN="uk-select uk-form-small uk-margin-small-bottom uk-text-right uk-width-1-5" val={this.state.perDpv} />
                           </div>
                        
 
@@ -659,7 +663,7 @@ render(){
 
                         <div className="uk-flex uk-flex-left uk-flex-column uk-text-small uk-margin-small-top uk-margin-small-left">
                           <span className="uk-text-secondary uk-text-normal">{this.state.lang==='ru' ? ru.input.moth_sal : kz.input.month}
-                            <InfoBlock text="Добровольные пенсионные взносыДобровольные пенсионные взносыДобровольные пенсионные взносы"/>
+                            
                           </span>
                           <input id="PayoutMonth" type="text" placeholder="*** *** ***" value={this.state.input.PayoutMonth} className="uk-text-right uk-width-1-2 uk-width-1-2 uk-input uk-form-small" onChange={this.handleChange}/>
                         </div>
